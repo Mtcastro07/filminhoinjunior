@@ -1,83 +1,44 @@
-import Image from "next/image";
+"use client";
+import { Inter } from "next/font/google";
+import { starMarked } from "@/app/page";
 import Navbar from "@/components/navbar";
-import poster from "../../public/posterFilminhos.png";
-import Footer from "@/components/footer";
+import { useParams } from "next/navigation";
+import poster from "../../../../public/posterFilminhos.png";
+import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Inter } from "next/font/google";
-import { FacebookIcon, InstagramIcon, StarOutIcon, StartInIcon, XIcon } from "../../public/icons";
-
- export function starMarked(target: number, count: number) {
-    if (target >= count) {
-      return <StartInIcon />;
-    } else {
-      return <StarOutIcon />;
-    }
-  }
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
- 
+export default function User() {
+  const params = useParams();
+  const id = params.id;
 
   return (
     <>
       <Navbar />
-        <div className={inter.className}>
-      <main className="bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF]">
-          <section>
-            <Carousel opts={{ loop: true, align: "center" }} className="w-full">
-              <CarouselContent className="-ml-9">
-                <CarouselItem className="basis-3/4 pl-9">
-                  <Image
-                    className="h-147.75 w-full object-cover overflow-hidden"
-                    src={poster}
-                    alt="poster"
-                  ></Image>
-                </CarouselItem>
-                <CarouselItem className="basis-3/4 pl-9">
-                  <Image
-                    className="h-147.75 w-full object-cover overflow-hidden"
-                    src={poster}
-                    alt="poster"
-                  ></Image>
-                </CarouselItem>
-                <CarouselItem className="basis-3/4 pl-9">
-                  <Image
-                    className="h-147.75 w-full object-coverv overflow-hidden"
-                    src={poster}
-                    alt="poster"
-                  ></Image>
-                </CarouselItem>
-                <CarouselItem className="basis-3/4 pl-9">
-                  <Image
-                    className="h-147.75 w-full object-cover overflow-hidden"
-                    src={poster}
-                    alt="poster"
-                  ></Image>
-                </CarouselItem>
-                <CarouselItem className="basis-3/4 pl-9">
-                  <Image
-                    className="h-147.75 w-full object-cover overflow-hidden"
-                    src={poster}
-                    alt="poster"
-                  ></Image>
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
+      <main className={inter.className}>
+        <div className="bg-linear-to-b from-[#A3D7EB] to-white min-h-screen">
+          <section className="flex flex-col justify-center items-center gap-8">
+            <Image
+              className="object-cover w-75 h-75 rounded-[100%]"
+              src={poster}
+              alt="poster"
+            ></Image>
+            <h1 className="font-bold text-5xl">Nome do Usuario</h1>
           </section>
-          <section className="mt-24.75 bg-linear-to-b from-white to-[#818D9180]">
+
+          <section className="mt-24.75 bg-linear-to-b">
             <p className="font-semibold text-2xl border-b-8 border-[#7189A7] w-61.75 rounded-b-md ml-13.75">
-              Ação
+              Favoritos
             </p>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-5">
-                <CarouselItem className="basis-1/5 pl-5">
+                <CarouselItem className="basis-1/8 pl-5">
                   <div className="relative w-50.25 h-79.5 overflow-hidden">
                     <Image
                       src={poster}
@@ -88,7 +49,7 @@ export default function Home() {
                     ></Image>
                   </div>
                 </CarouselItem>
-                <CarouselItem className="basis-1/5 pl-5">
+                <CarouselItem className="basis-1/8 pl-5">
                   <div className="relative w-50.25 h-79.5 overflow-hidden">
                     <Image
                       src={poster}
@@ -102,13 +63,13 @@ export default function Home() {
               </CarouselContent>
             </Carousel>
           </section>
-          <section className="pt-24.75 bg-linear-to-b from-[#818D9180] to-[#DCF0F7]">
+          <section className="mt-24.75 bg-linear-to-b ">
             <p className="font-semibold text-2xl border-b-8 border-[#7189A7] w-61.75 rounded-b-md ml-13.75">
-              Comédia
+              Assistidos
             </p>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-5">
-                <CarouselItem className="basis-1/5 pl-5">
+                <CarouselItem className="basis-1/8 pl-5">
                   <div className="relative w-50.25 h-79.5 overflow-hidden">
                     <Image
                       src={poster}
@@ -119,7 +80,7 @@ export default function Home() {
                     ></Image>
                   </div>
                 </CarouselItem>
-                <CarouselItem className="basis-1/5 pl-5">
+                <CarouselItem className="basis-1/8 pl-5">
                   <div className="relative w-50.25 h-79.5 overflow-hidden">
                     <Image
                       src={poster}
@@ -156,14 +117,6 @@ export default function Home() {
                       {starMarked(1, 5)}
                     </div>
                   </div>
-                  <div className="flex flex-row items-center justify-start">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      className="w-20 h-20 rounded-[100%] object-cover"
-                    ></Image>
-                    <p className="ml-4 font-semibold">Nome</p>
-                  </div>
                   <div className="flex flex-row justify-start">
                     <p className="font-semibold">aasdfafadsfasfadsfadsfdasf</p>
                   </div>
@@ -171,8 +124,9 @@ export default function Home() {
               </div>
             </div>
           </section>
-      </main>
         </div>
+      </main>
+
       <Footer />
     </>
   );

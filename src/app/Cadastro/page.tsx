@@ -1,8 +1,8 @@
 "use client";
 
-import { loginSchema } from "@/schemas/loginSchema";
-import type { loginForm } from "@/schemas/loginSchema";
 import api from "@/services/api";
+import { cadastroSchema } from "@/schemas/cadastroSchema";
+import type { cadastroForm } from "@/schemas/cadastroSchema";
 import { useForm } from "react-hook-form";
 import { Inter } from "next/font/google";
 import {
@@ -16,41 +16,38 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ShowIcon } from "../../../public/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Login() {
-  const [enviando, SetEnviando] = useState<boolean>(false);
-  const [error, SetError] = useState<boolean>(false);
+export default function Cadastro() {
+  const [error, setError] = useState<boolean>(false);
+  const [mostrar, SetMostrar] = useState<boolean>(false);
 
-  const { register, reset, handleSubmit } = useForm<loginForm>({
-    resolver: zodResolver(loginSchema),
+  const title = "Film{in}hos";
+
+  const { register, handleSubmit, reset } = useForm<cadastroForm>({
+    resolver: zodResolver(cadastroSchema),
   });
 
-  async function onSubmit(data: loginForm) {
+  async function onSubmit(data: cadastroForm) {
     try {
-      SetEnviando(!enviando);
-      const response = await api.post("/auth/login", {
+      const response = await api.post("/auth/signup", {
+        fullName: data.nome,
         email: data.email,
         password: data.senha,
+        passwordConfirmation: data.senhaConfirmation,
       });
     } catch (Error) {
-      console.log("Falha em fazer a requisição de login");
+      console.log("Erro na requisição de cadastro");
       console.error(Error);
-      SetError(!error);
-      SetEnviando(!enviando);
+      setError(!error);
     } finally {
-      SetEnviando(!enviando);
     }
     reset();
   }
-
-  const title = "Film{IN}nhos";
-  const [mostrar, SetMostrar] = useState<boolean>(false);
 
   return (
     <>
@@ -65,21 +62,31 @@ export default function Login() {
               className="shadow-2xl rounded-xl min-h-120.5 min-w-114.25 pl-11 pb-13.5 pr-11 pt-13.5 bg-white items-center justify-center"
             >
               <FieldGroup>
-                <FieldSet className="items-center text-center justify-center">
+                <FieldSet className="items-center text-left justify-center">
                   <FieldLegend className="text-5xl! mb-5 font-semibold text-center w-full">
-                    Login
+                    Cadastro
                   </FieldLegend>
                   <FieldDescription className="font-semibold text-black">
-                    Não possui uma conta?
+                    Já possui uma conta?
                     <Link
                       className="ml-2 no-underline! text-[#007BFE]"
-                      href="/Cadastro"
+                      href="/Login"
                     >
-                      Cadastre-se
+                      Login
                     </Link>
                   </FieldDescription>
                 </FieldSet>
                 <FieldGroup>
+                  <Field>
+                    <FieldLabel className="text-[Grey]">
+                      Nome completo
+                    </FieldLabel>
+                    <Input
+                      className="text-black"
+                      type="text"
+                      {...register("nome")}
+                    ></Input>
+                  </Field>
                   <Field>
                     <FieldLabel className="text-[Grey]">Email</FieldLabel>
                     <Input
@@ -87,6 +94,18 @@ export default function Login() {
                       type="text"
                       {...register("email")}
                     ></Input>
+                  </Field>
+                  <Field>
+                    <FieldLabel className="text-[Grey]">
+                      Data de nascimento
+                    </FieldLabel>
+                    <Input type="date" />
+                  </Field>
+                  <Field>
+                    <FieldLabel className="text-[Grey]">
+                      Número de telefone
+                    </FieldLabel>
+                    <Input type="number" className="text-black" />
                   </Field>
                   <Field>
                     <FieldLabel className="text-[Grey]">Senha</FieldLabel>
@@ -104,30 +123,33 @@ export default function Login() {
                       </div>
                     </div>
                   </Field>
-                  <Field className="flex flex-row items-center">
-                    <div className="flex items-center justify-center gap-1.25 mr-10">
-                      <Checkbox className="bg-white cursor-pointer border border-[#6C7278]" />
-                      <FieldLabel className="font-medium text-xs text-[#6C7278]">
-                        Mantenha-me conectado
-                      </FieldLabel>
-                    </div>
-                    <div>
-                      <FieldLabel className="ml-auto text-xs text-[#4D81E7]">
-                        Esqueceu a senha?
-                      </FieldLabel>
+                  <Field>
+                    <FieldLabel className="text-[Grey]">
+                      Confirmar senha
+                    </FieldLabel>
+                    <div className=" flex relative">
+                      <Input
+                        className="bg-white"
+                        type={mostrar == true ? "text" : "password"}
+                        {...register("senhaConfirmation")}
+                      ></Input>
+                      <div
+                        className="absolute right-3 top-2 cursor-pointer"
+                        onClick={() => SetMostrar(!mostrar)}
+                      >
+                        <ShowIcon />
+                      </div>
                     </div>
                   </Field>
                 </FieldGroup>
                 {error && (
-                  <p className="text-red-600">
-                    Sua senha ou e-email estão incorretos
-                  </p>
+                  <p className="text-red-600">Usuario com email já existente</p>
                 )}
                 <Button
                   type="submit"
                   className="cursor-pointer h-12 bg-[#1B559D] hover:bg-[#083a78]!"
                 >
-                  {enviando == false ? "Log In" : "Carregando..."}
+                  Cadastre-se
                 </Button>
               </FieldGroup>
             </form>
