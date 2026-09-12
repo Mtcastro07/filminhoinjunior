@@ -13,8 +13,8 @@ export default function Favoritos() {
   return (
     <>
       <Navbar />
-      <main className={inter.className}>
-        <div className="bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF] h-screen">
+      <main className={`${inter.className} flex flex-1 flex-col`}>
+        <div className="flex-1 bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF]">
           <h1 className="ml-25 pt-21 -mb-4 font-medium text-5xl">Assistidos</h1>
           <div className="flex w-full relative">
             <div className="absolute top-27 left-29">

@@ -2,7 +2,7 @@
 import { Inter } from "next/font/google";
 import { starMarked } from "@/app/page";
 import Navbar from "@/components/navbar";
-import { useParams } from "next/navigation";
+import noUser from "../../../../public/userDefault.jpg"
 import poster from "../../../../public/posterFilminhos.png";
 import Image from "next/image";
 import {
@@ -11,12 +11,13 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Footer from "@/components/footer";
+import useUser from "@/hooks/useUser";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function User() {
-  const params = useParams();
-  const id = params.id;
+
+  const User = useUser()
 
   return (
     <>
@@ -26,10 +27,10 @@ export default function User() {
           <section className="flex flex-col justify-center items-center gap-8">
             <Image
               className="object-cover w-75 h-75 rounded-[100%]"
-              src={poster}
+              src={User?.avatarUrl || noUser}
               alt="poster"
             ></Image>
-            <h1 className="font-bold text-5xl">Nome do Usuario</h1>
+            <h1 className="font-bold text-5xl">{User?.fullName}</h1>
           </section>
 
           <section className="mt-24.75 bg-linear-to-b">

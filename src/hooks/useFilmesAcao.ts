@@ -9,7 +9,7 @@ export default function useFilmesAcao(){
     useEffect(()=>{
         async function carregarFilmesAcao(){
             const response = await api.get("/movies")
-            const filmes = response.data
+            const filmes = response.data.data
             const filmesFiltrados = filmes.filter((filme: filme) => filme.genres.some((genero)=> genero.name === "Ação"))
             setFilmes(filmesFiltrados)
         }

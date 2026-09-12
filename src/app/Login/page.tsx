@@ -1,8 +1,10 @@
 "use client";
 
 import { loginSchema } from "@/schemas/loginSchema";
+import { useRouter } from "next/navigation";
 import type { loginForm } from "@/schemas/loginSchema";
 import api from "@/services/api";
+import { useAuthStore } from "@/stores/authStore";
 import { useForm } from "react-hook-form";
 import { Inter } from "next/font/google";
 import {
@@ -26,27 +28,35 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Login() {
   const [enviando, SetEnviando] = useState<boolean>(false);
   const [error, SetError] = useState<boolean>(false);
+  const router = useRouter()
 
-  const { register, reset, handleSubmit } = useForm<loginForm>({
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginForm>({
     resolver: zodResolver(loginSchema),
   });
 
   async function onSubmit(data: loginForm) {
+    SetEnviando(true);
+    SetError(false);
     try {
-      SetEnviando(!enviando);
       const response = await api.post("/auth/login", {
         email: data.email,
         password: data.senha,
       });
-    } catch (Error) {
-      console.log("Falha em fazer a requisição de login");
-      console.error(Error);
-      SetError(!error);
-      SetEnviando(!enviando);
+      const { token, user } = response.data.data;
+      useAuthStore.getState().setAuth(token, user);
+      reset();
+      router.push("/");
+    } catch (err) {
+      console.error("Falha em fazer a requisição de login", err);
+      SetError(true);
     } finally {
-      SetEnviando(!enviando);
+      SetEnviando(false);
     }
-    reset();
   }
 
   const title = "Film{IN}nhos";
@@ -84,9 +94,14 @@ export default function Login() {
                     <FieldLabel className="text-[Grey]">Email</FieldLabel>
                     <Input
                       className="bg-white"
-                      type="text"
+                      type="email"
                       {...register("email")}
                     ></Input>
+                    {errors.email && (
+                      <p className="text-red-600 text-sm">
+                        {errors.email.message}
+                      </p>
+                    )}
                   </Field>
                   <Field>
                     <FieldLabel className="text-[Grey]">Senha</FieldLabel>
@@ -103,6 +118,11 @@ export default function Login() {
                         <ShowIcon />
                       </div>
                     </div>
+                    {errors.senha && (
+                      <p className="text-red-600 text-sm">
+                        {errors.senha.message}
+                      </p>
+                    )}
                   </Field>
                   <Field className="flex flex-row items-center">
                     <div className="flex items-center justify-center gap-1.25 mr-10">
@@ -125,7 +145,8 @@ export default function Login() {
                 )}
                 <Button
                   type="submit"
-                  className="cursor-pointer h-12 bg-[#1B559D] hover:bg-[#083a78]!"
+                  disabled={enviando}
+                  className="cursor-pointer h-12 bg-[#1B559D] hover:bg-[#083a78]! disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {enviando == false ? "Log In" : "Carregando..."}
                 </Button>

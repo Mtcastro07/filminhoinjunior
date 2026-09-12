@@ -1,8 +1,10 @@
 "use client";
 
 import api from "@/services/api";
+import { useRouter } from "next/navigation";
 import { cadastroSchema } from "@/schemas/cadastroSchema";
 import type { cadastroForm } from "@/schemas/cadastroSchema";
+import { useAuthStore } from "@/stores/authStore";
 import { useForm } from "react-hook-form";
 import { Inter } from "next/font/google";
 import {
@@ -24,15 +26,23 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Cadastro() {
   const [error, setError] = useState<boolean>(false);
+  const [enviando, setEnviando] = useState<boolean>(false);
   const [mostrar, SetMostrar] = useState<boolean>(false);
-
+  const router = useRouter()
   const title = "Film{in}hos";
 
-  const { register, handleSubmit, reset } = useForm<cadastroForm>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<cadastroForm>({
     resolver: zodResolver(cadastroSchema),
   });
 
   async function onSubmit(data: cadastroForm) {
+    setEnviando(true);
+    setError(false);
     try {
       const response = await api.post("/auth/signup", {
         fullName: data.nome,
@@ -40,13 +50,16 @@ export default function Cadastro() {
         password: data.senha,
         passwordConfirmation: data.senhaConfirmation,
       });
-    } catch (Error) {
-      console.log("Erro na requisição de cadastro");
-      console.error(Error);
-      setError(!error);
+      const { token, user } = response.data.data;
+      useAuthStore.getState().setAuth(token, user);
+      reset();
+      router.push("/");
+    } catch (err) {
+      console.error("Erro na requisição de cadastro", err);
+      setError(true);
     } finally {
+      setEnviando(false);
     }
-    reset();
   }
 
   return (
@@ -59,7 +72,7 @@ export default function Cadastro() {
             </h1>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="shadow-2xl rounded-xl min-h-120.5 min-w-114.25 pl-11 pb-13.5 pr-11 pt-13.5 bg-white items-center justify-center"
+              className="shadow-2xl rounded-xl h-200.5 min-w-114.25 pl-11 pb-13.5 pr-11 pt-13.5 bg-white items-center justify-center"
             >
               <FieldGroup>
                 <FieldSet className="items-center text-left justify-center">
@@ -86,14 +99,24 @@ export default function Cadastro() {
                       type="text"
                       {...register("nome")}
                     ></Input>
+                    {errors.nome && (
+                      <p className="text-red-600 text-sm">
+                        {errors.nome.message}
+                      </p>
+                    )}
                   </Field>
                   <Field>
                     <FieldLabel className="text-[Grey]">Email</FieldLabel>
                     <Input
                       className="bg-white"
-                      type="text"
+                      type="email"
                       {...register("email")}
                     ></Input>
+                    {errors.email && (
+                      <p className="text-red-600 text-sm">
+                        {errors.email.message}
+                      </p>
+                    )}
                   </Field>
                   <Field>
                     <FieldLabel className="text-[Grey]">
@@ -122,6 +145,11 @@ export default function Cadastro() {
                         <ShowIcon />
                       </div>
                     </div>
+                    {errors.senha && (
+                      <p className="text-red-600 text-sm">
+                        {errors.senha.message}
+                      </p>
+                    )}
                   </Field>
                   <Field>
                     <FieldLabel className="text-[Grey]">
@@ -140,6 +168,11 @@ export default function Cadastro() {
                         <ShowIcon />
                       </div>
                     </div>
+                    {errors.senhaConfirmation && (
+                      <p className="text-red-600 text-sm">
+                        {errors.senhaConfirmation.message}
+                      </p>
+                    )}
                   </Field>
                 </FieldGroup>
                 {error && (
@@ -147,9 +180,10 @@ export default function Cadastro() {
                 )}
                 <Button
                   type="submit"
-                  className="cursor-pointer h-12 bg-[#1B559D] hover:bg-[#083a78]!"
+                  disabled={enviando}
+                  className="cursor-pointer h-12 bg-[#1B559D] hover:bg-[#083a78]! disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Cadastre-se
+                  {enviando == false ? "Cadastre-se" : "Carregando..."}
                 </Button>
               </FieldGroup>
             </form>

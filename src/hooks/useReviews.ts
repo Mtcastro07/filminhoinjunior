@@ -10,7 +10,7 @@ export default function useReviews(){
     useEffect(()=>{
         async function carregarReview(){
             const response = await api.get("/reviews")
-            setReviews(response.data)
+            setReviews(response.data.data)
         }
         carregarReview()
     },[])

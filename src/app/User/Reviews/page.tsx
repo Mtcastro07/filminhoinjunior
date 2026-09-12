@@ -31,7 +31,7 @@ export default function Reviews() {
   return (
     <>
       <Navbar />
-      <main className="bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF] h-screen">
+      <main className="flex-1 bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF]">
         <div className={inter.className}>
           <h1 className="ml-25 pt-21 -mb-4 font-medium text-5xl">
             Minhas Avaliações

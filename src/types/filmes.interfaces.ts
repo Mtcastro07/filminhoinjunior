@@ -32,10 +32,9 @@ export interface filmeReview {
 
 export interface userReview {
     id: number,
-    title: string,
-    posterImageUrl?: string,
-    releaseYear: number,
-    genres: genero[]
+    fullName: string,
+    avatarUrl?: string ,
+    initials: string
 }
 
 export interface review {
