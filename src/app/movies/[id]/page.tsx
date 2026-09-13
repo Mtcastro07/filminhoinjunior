@@ -6,7 +6,8 @@ import type { filme, genero } from "@/types/filmes.interfaces";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import api from "@/services/api";
-import poster from "../../../../public/posterFilminhos.png";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -30,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 import noImage from "../../../../public/noImage.jpg";
 import useReviewFilme from "@/hooks/useReviewFilme";
+import useCriarReview from "@/hooks/useCriarReview";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +47,16 @@ export default function Movie() {
   const [filme, setFilme] = useState<filme>();
   const [modal, setModal] = useState<boolean>(false);
   const [nota, setNota] = useState<number>(0);
+  const [review, setReview] = useState<string>("")
+  const { token, user } = useAuthStore();
+  const [mounted, setMounted] = useState<boolean>(false);
+  const router = useRouter()
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const estaLogado = mounted && !!token;
 
   const params = useParams();
   const id = params.id;
@@ -59,6 +71,8 @@ export default function Movie() {
   }, [id]);
 
   const reviewsFilme = useReviewFilme(id);
+
+  
 
   return (
     <>
@@ -112,17 +126,25 @@ export default function Movie() {
                 {starMarkedFilm(filme?.avgRating || 0, 4)}
                 {starMarkedFilm(filme?.avgRating || 0, 5)}
               </div>
-              <p className="font-normal text-xl">{filme?.reviewCount} avaliacoes</p>
+              <p className="font-normal text-xl">
+                {filme?.reviewCount} avaliacoes
+              </p>
             </div>
             <p className="text-6xl pb-6 pl-8">{filme?.avgRating || 0}</p>
           </div>
           <div className="flex justify-end mr-25">
-            <Button
+            {estaLogado ? <Button
               onClick={() => setModal(!modal)}
               className="px-12 py-[28.5px] font-semibold rounded-[1000px] text-xl bg-[#3539EF] cursor-pointer"
             >
               Criar uma review
-            </Button>
+            </Button> : <Button
+              onClick={() => router.push("/Login")}
+              className="px-12 py-[28.5px] font-semibold rounded-[1000px] text-xl bg-[#3539EF] cursor-pointer"
+            >
+              Criar uma review
+            </Button>}
+            
           </div>
         </section>
         <section className="px-25 py-12.5">
@@ -187,13 +209,14 @@ export default function Movie() {
                 <Textarea
                   placeholder="Escrever avaliação..."
                   className="border! border-black h-25 bg-white"
+                  onChange={(e) => setReview(e.target.value)}
                 ></Textarea>
               </Field>
             </FieldGroup>
             <DialogFooter className={inter.className}>
               <Button
                 type="submit"
-                onClick={() => setModal(!modal)}
+                onClick={() => (setModal(!modal), useCriarReview(id,nota,review), setReview(""))}
                 className="font-bold rounded-4xl text-xs bg-[#1419AE] cursor-pointer"
               >
                 Concluir
