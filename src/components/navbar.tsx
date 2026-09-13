@@ -30,7 +30,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Navbar() {
   const { token, user } = useAuthStore();
-  const fazerLogout = useLogout();
+  const logout = useLogout();
   const [buscar, setBuscar] = useState<string>("");
   const [mounted, setMounted] = useState<boolean>(false);
   const router = useRouter();
@@ -99,7 +99,7 @@ export default function Navbar() {
                           {estaLogado ? (
                             <button
                               type="button"
-                              onClick={fazerLogout}
+                              onClick={() => logout.mutate()}
                               className="ml-3 text-red-600 cursor-pointer bg-transparent"
                             >
                               Sair

@@ -1,16 +1,14 @@
-import api from "@/services/api"
-import { genero } from "@/types/filmes.interfaces"
-import { useEffect, useState } from "react"
+"use client";
+import api from "@/services/api";
+import { genero } from "@/types/filmes.interfaces";
+import { useQuery } from "@tanstack/react-query";
 
-export default function useGeneros(){
-    const [generos, setGeneros] = useState<genero[]>([])
-
-    useEffect(()=>{
-        async function carregarGeneros(){
-            const response = await api.get("/genres")
-            setGeneros(response.data.data)
-        }
-        carregarGeneros()
-    },[])
-    return generos
+export default function useGeneros() {
+  return useQuery({
+    queryKey: ["genres"],
+    queryFn: async () => {
+      const response = await api.get("/genres");
+      return response.data.data as genero[];
+    },
+  });
 }

@@ -1,19 +1,18 @@
-'use client'
-import api from "@/services/api"
-import { filme } from "@/types/filmes.interfaces"
-import { useEffect, useState } from "react"
+"use client";
+import api from "@/services/api";
+import { filme } from "@/types/filmes.interfaces";
+import { useQuery } from "@tanstack/react-query";
 
-export default function useFilmesAcao(){
-    const [filmes, setFilmes] = useState<filme[]>([])
-
-    useEffect(()=>{
-        async function carregarFilmesAcao(){
-            const response = await api.get("/movies")
-            const filmes = response.data.data
-            const filmesFiltrados = filmes.filter((filme: filme) => filme.genres.some((genero)=> genero.name === "Ação"))
-            setFilmes(filmesFiltrados)
-        }
-        carregarFilmesAcao()
-    },[])
-    return filmes
+export default function useFilmesAcao() {
+  return useQuery({
+    queryKey: ["movies"],
+    queryFn: async () => {
+      const response = await api.get("/movies");
+      return response.data.data as filme[];
+    },
+    select: (filmes) =>
+      filmes.filter((filme) =>
+        filme.genres.some((genero) => genero.name === "Ação"),
+      ),
+  });
 }

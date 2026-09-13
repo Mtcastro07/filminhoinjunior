@@ -38,9 +38,9 @@ export default function movies() {
   const [modal, setModal] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const termoInicial = searchParams.get("search") || "";
-  const filmes = useFilmes();
+  const { data: filmes = [] } = useFilmes();
   const [busca, setBusca] = useState(termoInicial);
-  const generos = useGeneros();
+  const { data: generos = [] } = useGeneros();
 
   function alternarGeneros(genero: string) {
     if (generosSelecionados.includes(genero)) {

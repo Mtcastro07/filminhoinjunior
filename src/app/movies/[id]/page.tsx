@@ -2,12 +2,10 @@
 import { Inter } from "next/font/google";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import type { filme, genero } from "@/types/filmes.interfaces";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import api from "@/services/api";
 import { useAuthStore } from "@/stores/authStore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -32,6 +30,7 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import noImage from "../../../../public/noImage.jpg";
 import useReviewFilme from "@/hooks/useReviewFilme";
 import useCriarReview from "@/hooks/useCriarReview";
+import useFilme from "@/hooks/useFilme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,35 +43,26 @@ function starMarkedFilm(target: number, count: number) {
 }
 
 export default function Movie() {
-  const [filme, setFilme] = useState<filme>();
   const [modal, setModal] = useState<boolean>(false);
   const [nota, setNota] = useState<number>(0);
   const [review, setReview] = useState<string>("")
   const { token, user } = useAuthStore();
   const [mounted, setMounted] = useState<boolean>(false);
-  const router = useRouter()
-
+  
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const router = useRouter()
+  
   const estaLogado = mounted && !!token;
 
   const params = useParams();
   const id = params.id;
 
-  useEffect(() => {
-    if (!id) return;
-    async function carregarFilme() {
-      const response = await api.get(`/movies/${id}`);
-      return setFilme(response.data.data);
-    }
-    carregarFilme();
-  }, [id]);
-
-  const reviewsFilme = useReviewFilme(id);
-
-  
+  const { data: filme } = useFilme(id);
+  const { data: reviewsFilme = [] } = useReviewFilme(id);
+  const criarReview = useCriarReview();
 
   return (
     <>
@@ -216,7 +206,15 @@ export default function Movie() {
             <DialogFooter className={inter.className}>
               <Button
                 type="submit"
-                onClick={() => (setModal(!modal), useCriarReview(id,nota,review), setReview(""))}
+                onClick={() => {
+                  criarReview.mutate({
+                    movieId: parseInt(id as string, 10),
+                    rating: nota,
+                    text: review,
+                  });
+                  setModal(false);
+                  setReview("");
+                }}
                 className="font-bold rounded-4xl text-xs bg-[#1419AE] cursor-pointer"
               >
                 Concluir

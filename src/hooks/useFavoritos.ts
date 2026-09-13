@@ -3,16 +3,12 @@ import api from "@/services/api";
 import { filme } from "@/types/filmes.interfaces";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useFilmesComedia() {
+export default function useFavoritos() {
   return useQuery({
-    queryKey: ["movies"],
+    queryKey: ["favorites"],
     queryFn: async () => {
-      const response = await api.get("/movies");
+      const response = await api.get("/account/favorites");
       return response.data.data as filme[];
     },
-    select: (filmes) =>
-      filmes.filter((filme) =>
-        filme.genres.some((genero) => genero.name === "Comédia"),
-      ),
   });
 }

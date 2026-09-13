@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function User() {
 
-  const User = useUser()
+  const { data: User } = useUser();
 
   return (
     <>

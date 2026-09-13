@@ -1,23 +1,20 @@
-'use client'
-
+"use client";
 import api from "@/services/api";
-import { ParamValue } from "next/dist/server/request/params";
-import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function useCriarReview(id: ParamValue, rating: number, texto: string){
-    const filmId = parseInt(id as string, 10);
-     useEffect(()=> {
-        async function criarReview(){
-            try{
-                const response = await api.post(`/reviews/`, {
-                    movieId: filmId,
-                    rating: rating,
-                    text: texto
-                });
-            } catch (error) {
-                console.error("Erro ao criar a review do usuário:", error);
-            }
-        }
-     }, [filmId, rating, texto])
-     
+interface CriarReviewInput {
+  movieId: number;
+  rating: number;
+  text: string;
+}
+
+export default function useCriarReview() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CriarReviewInput) => api.post("/reviews/", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
+    },
+  });
 }

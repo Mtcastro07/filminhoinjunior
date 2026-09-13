@@ -1,21 +1,18 @@
-import api from "@/services/api"
-import { useAuthStore } from "@/stores/authStore"
-import { useRouter } from "next/navigation"
+"use client";
+import api from "@/services/api";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
-export default function useLogout(){
-    const logout = useAuthStore((state) => state.logout)
-    const router = useRouter()
+export default function useLogout() {
+  const logout = useAuthStore((state) => state.logout);
+  const router = useRouter();
 
-    async function fazerLogout(){
-        try {
-            await api.post("/account/logout")
-        } catch (err) {
-            console.error("Falha ao encerrar sessão no servidor", err)
-        } finally {
-            logout()
-            router.push("/")
-        }
-    }
-
-    return fazerLogout
+  return useMutation({
+    mutationFn: () => api.post("/account/logout"),
+    onSettled: () => {
+      logout();
+      router.push("/");
+    },
+  });
 }

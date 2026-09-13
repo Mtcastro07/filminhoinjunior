@@ -39,10 +39,10 @@ export function starMarked(target: number, count: number) {
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const reviews = useReviews();
-  const filmesComedia = useFilmesComedia();
-  const filmesAcao = useFilmesAcao();
-  const filmesFeatured = useFilmesFeatured();
+  const { data: reviews = [] } = useReviews();
+  const { data: filmesComedia = [] } = useFilmesComedia();
+  const { data: filmesAcao = [] } = useFilmesAcao();
+  const { data: filmesFeatured = [] } = useFilmesFeatured();
 
   return (
     <>

@@ -21,8 +21,8 @@ const inter = Inter({ subsets: ["latin"] });
 export default function User() {
   const params = useParams();
   const id = params.id;
-  const userReview = useUserReview(id);
-  const user = useUsers(id);
+  const { data: userReview = [] } = useUserReview(id);
+  const { data: user } = useUsers(id);
 
   return (
     <>

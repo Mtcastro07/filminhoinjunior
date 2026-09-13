@@ -1,7 +1,15 @@
-'use client'
+"use client";
+import api from "@/services/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ParamValue } from "next/dist/server/request/params";
+export default function useDesfavoritar() {
+  const queryClient = useQueryClient();
 
-export default function useDesfavoritar(id: ParamValue) {
-    
+  return useMutation({
+    mutationFn: (movieId: number) =>
+      api.delete(`/account/favorites/${movieId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["favorites"] });
+    },
+  });
 }
