@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import noImage from "../../../public/noImage.jpg";
@@ -33,7 +33,7 @@ import { genero } from "@/types/filmes.interfaces";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function movies() {
+function MoviesContent() {
   const [generosSelecionados, setGenerosSelecionados] = useState<string[]>([]);
   const [modal, setModal] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -96,6 +96,7 @@ export default function movies() {
             </Button>
             {generosSelecionados.map((genero) => (
               <Button 
+              key={genero}
               onClick={()=> alternarGeneros(genero)}
               className=" text-white cursor-pointer w-50 h-16 rounded-[1000px] cursor-pointer bg-[#19AE14] ml-25">
                 <div className="flex flex-row  justify-center items-center">
@@ -132,6 +133,7 @@ export default function movies() {
                 <div className="grid grid-rows-3 grid-cols-4 gap-2">
                   {generos.map((genero) => (
                     <Button
+                      key={genero.name}
                       onClick={() => alternarGeneros(genero.name)}
                       type="submit"
                       className={
@@ -174,5 +176,13 @@ export default function movies() {
       )}
       <Footer />
     </>
+  );
+}
+
+export default function MoviesPage() {
+  return (
+    <Suspense fallback={<div className="flex w-full h-screen items-center justify-center">Carregando...</div>}>
+      <MoviesContent />
+    </Suspense>
   );
 }

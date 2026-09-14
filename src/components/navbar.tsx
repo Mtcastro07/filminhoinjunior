@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuthStore } from "@/stores/authStore";
+// TODO: Replace with useSession from next-auth
+// import { useSession } from "next-auth/react";
 import useLogout from "@/hooks/useLogout";
 import { Inter } from "next/font/google";
 import Link from "next/link";
@@ -29,7 +30,11 @@ import { Button } from "./ui/button";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Navbar() {
-  const { token, user } = useAuthStore();
+  // TODO: Refactor using next-auth
+  // const { data: session } = useSession();
+  const token = null;
+  const user = null;
+
   const logout = useLogout();
   const [buscar, setBuscar] = useState<string>("");
   const [mounted, setMounted] = useState<boolean>(false);
@@ -67,10 +72,10 @@ export default function Navbar() {
                   <DropdownMenuTrigger className="cursor-pointer">
                     <LupaIcon />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className={inter.className}>
                     <DropdownMenuGroup className="font-medium text-black">
                       <DropdownMenuLabel>
-                        <Link href="/Favoritos">
+                        <Link href="/User/Favoritos">
                           <div className="flex justify-start items-center ">
                             <FavoritosIcon />
                             <p className="ml-3 text-black">Favoritos</p>
@@ -78,7 +83,7 @@ export default function Navbar() {
                         </Link>
                       </DropdownMenuLabel>
                       <DropdownMenuLabel>
-                        <Link href="/Assistidos">
+                        <Link href="/User/Assistidos">
                           <div className="flex justify-start items-center ">
                             <AssistidosIcon />
                             <p className="ml-3 text-black">Assistidos</p>
@@ -86,7 +91,7 @@ export default function Navbar() {
                         </Link>
                       </DropdownMenuLabel>
                       <DropdownMenuLabel>
-                        <Link href="/Avaliados">
+                        <Link href="/User/Reviews">
                           <div className="flex justify-start items-center ">
                             <AvaliacaoIcon />
                             <p className="ml-3 text-black">Avaliações</p>

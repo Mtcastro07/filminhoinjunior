@@ -1,3 +1,4 @@
+'use client'
 import Navbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import { LupaIcon, FavoritadoIcon } from "../../../../public/icons";
@@ -6,10 +7,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 import Footer from "@/components/footer";
+import useFavoritos from "@/hooks/useFavoritos";
+import useDesfavoritar from "@/hooks/useDesfavoritar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Favoritos() {
+  const { data: favoritos } = useFavoritos();
+  const desfavoritar = useDesfavoritar();
   return (
     <>
       <Navbar />
@@ -26,61 +31,24 @@ export default function Favoritos() {
             ></Input>
           </div>
           <section className="relative mx-auto grid grid-cols-5 px-25 gap-8 py-[70px] w-[1440px] items-center justify-center">
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <FavoritadoIcon />
-              </Link>
+            {favoritos?.map((filme) => (
+              <div className="relative cursor-pointer">
+                <div onClick={()=> desfavoritar.mutate(filme.id)} className="absolute z-50 cursor-pointer">
+                  <FavoritadoIcon />
+                </div>
+                <Link href={`/movies/${filme.id}`}>
+                <Image
+                  className="w-[220px] h-[349px] object-cover"
+                  src={filme.posterImageUrl}
+                  width={1080}
+                  height={1920}
+                  alt="poster"
+                ></Image>
+                </Link>
+              </div>
+            ))}
 
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <FavoritadoIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <FavoritadoIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <FavoritadoIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <FavoritadoIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
+           
           </section>
         </div>
       </main>

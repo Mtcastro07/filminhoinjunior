@@ -10,7 +10,7 @@ export default function useUserReview(id: ParamValue) {
   return useQuery({
     queryKey: ["reviews"],
     queryFn: async () => {
-      const response = await api.get("/reviews");
+      const response = await api.get(`/users/${userId}/reviews`);
       return response.data.data as review[];
     },
     select: (reviews) => reviews.filter((review) => review.user.id === userId),

@@ -4,7 +4,7 @@ import { loginSchema } from "@/schemas/loginSchema";
 import { useRouter } from "next/navigation";
 import type { loginForm } from "@/schemas/loginSchema";
 import api from "@/services/api";
-import { useAuthStore } from "@/stores/authStore";
+// import { useAuthStore } from "@/stores/authStore";
 import { useForm } from "react-hook-form";
 import { Inter } from "next/font/google";
 import {
@@ -22,13 +22,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ShowIcon } from "../../../public/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
+// TODO: Replace with signIn from next-auth/react
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Login() {
   const [enviando, SetEnviando] = useState<boolean>(false);
   const [error, SetError] = useState<boolean>(false);
-  const router = useRouter()
+  const [mantenhaConectado, setMantenhaConectado] = useState<boolean>(true);
+  const router = useRouter();
 
   const {
     register,
@@ -47,8 +49,8 @@ export default function Login() {
         email: data.email,
         password: data.senha,
       });
-      const { token, user } = response.data.data;
-      useAuthStore.getState().setAuth(token, user);
+      // const { token, user } = response.data.data;
+      // useAuthStore.getState().setAuth(token, user, mantenhaConectado);
       reset();
       router.push("/");
     } catch (err) {
@@ -126,8 +128,15 @@ export default function Login() {
                   </Field>
                   <Field className="flex flex-row items-center">
                     <div className="flex items-center justify-center gap-1.25 mr-10">
-                      <Checkbox className="bg-white cursor-pointer border border-[#6C7278]" />
-                      <FieldLabel className="font-medium text-xs text-[#6C7278]">
+                      <Checkbox
+                        checked={mantenhaConectado}
+                        onCheckedChange={(checked) => setMantenhaConectado(!!checked)}
+                        className="bg-white cursor-pointer border border-[#6C7278]"
+                      />
+                      <FieldLabel
+                        onClick={() => setMantenhaConectado(!mantenhaConectado)}
+                        className="font-medium text-xs text-[#6C7278] cursor-pointer"
+                      >
                         Mantenha-me conectado
                       </FieldLabel>
                     </div>

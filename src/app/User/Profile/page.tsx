@@ -2,8 +2,8 @@
 import { Inter } from "next/font/google";
 import { starMarked } from "@/app/page";
 import Navbar from "@/components/navbar";
-import noUser from "../../../../public/userDefault.jpg"
-import poster from "../../../../public/posterFilminhos.png";
+import noUser from "../../../../public/userDefault.jpg";
+import noImage from "../../../../public/noImage.jpg";
 import Image from "next/image";
 import {
   Carousel,
@@ -12,12 +12,18 @@ import {
 } from "@/components/ui/carousel";
 import Footer from "@/components/footer";
 import useUser from "@/hooks/useUser";
+import useFavoritos from "@/hooks/useFavoritos";
+import useAssistidos from "@/hooks/useAssistidos";
+import useReview from "@/hooks/useReview";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function User() {
-
   const { data: User } = useUser();
+  const { data: favoritos } = useFavoritos();
+  const { data: assistidos } = useAssistidos();
+  const { data: reviews } = useReview();
 
   return (
     <>
@@ -39,28 +45,24 @@ export default function User() {
             </p>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-5">
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relative w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relative w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
+                {favoritos?.map((filme) => (
+                  <CarouselItem className="basis-1/8 pl-5" key={filme.id}>
+                    <div className="relative w-50.25 h-79.5 overflow-hidden">
+                      <Link
+                        href={`/movies/${filme.id}`}
+                        className="block shrink-0 cursor-pointer"
+                      >
+                        <Image
+                          src={filme.posterImageUrl}
+                          alt="poster"
+                          fill
+                          className="object-cover"
+                          priority
+                        ></Image>
+                      </Link>
+                    </div>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
             </Carousel>
           </section>
@@ -70,28 +72,24 @@ export default function User() {
             </p>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-5">
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relative w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relative w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
+                {assistidos?.map((filme) => (
+                  <CarouselItem className="basis-1/8 pl-5" key={filme.id}>
+                    <div className="relative w-50.25 h-79.5 overflow-hidden">
+                      <Link
+                        href={`/movies/${filme.id}`}
+                        className="block shrink-0 cursor-pointer"
+                      >
+                        <Image
+                          src={filme.posterImageUrl}
+                          alt="poster"
+                          fill
+                          className="object-cover"
+                          priority
+                        ></Image>
+                      </Link>
+                    </div>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
             </Carousel>
           </section>
@@ -99,31 +97,43 @@ export default function User() {
             <h1 className="bg-linear-to-r from-[#000000] to-[#1B559D] bg-clip-text text-transparent text-5xl font-semibold">
               Reviews
             </h1>
-            <div className="bg-white mx-25 mt-13.75 rounded-xl drop-shadow-2xl">
-              <div className="flex flex-row items-start p-8">
-                <Image
-                  src={poster}
-                  alt="poster"
-                  className=" w-46 h-61.25 object-cover"
-                ></Image>
-                <div className="flex flex-col ml-6 gap-6">
-                  <div className="flex flex-row items-center gap-6 justify-center ">
-                    <p className="font-bold text-3xl">Titulo</p>
-                    <p className="font-normal">2012</p>
-                    <div className="flex flex-row ">
-                      {starMarked(1, 1)}
-                      {starMarked(1, 2)}
-                      {starMarked(1, 3)}
-                      {starMarked(1, 4)}
-                      {starMarked(1, 5)}
+            {reviews?.map((review) => (
+              <div
+                className="bg-white mx-25 mt-13.75 rounded-xl drop-shadow-2xl"
+                key={review.id}
+              >
+                <div className="flex flex-row items-start p-8">
+                  <Link
+                    href={`/movies/${review.movie.id}`}
+                    className="block shrink-0 cursor-pointer"
+                  >
+                    <Image
+                      src={review.user.avatarUrl || noImage}
+                      alt="poster"
+                      className=" w-46 h-61.25 object-cover"
+                      width={80}
+                      height={80}
+                    ></Image>
+                  </Link>
+                  <div className="flex flex-col ml-6 gap-6">
+                    <div className="flex flex-row items-center gap-6 justify-center ">
+                      <p className="font-bold text-3xl">{review.movie.title}</p>
+                      <p className="font-normal">{review.movie.releaseYear}</p>
+                      <div className="flex flex-row ">
+                        {starMarked(review.rating, 1)}
+                        {starMarked(review.rating, 2)}
+                        {starMarked(review.rating, 3)}
+                        {starMarked(review.rating, 4)}
+                        {starMarked(review.rating, 5)}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-row justify-start">
-                    <p className="font-semibold">aasdfafadsfasfadsfadsfdasf</p>
+                    <div className="flex flex-row justify-start">
+                      <p className="font-semibold">{review.text}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </section>
         </div>
       </main>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { useAuthStore } from "@/stores/authStore";
+// import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AssistidoIcon,
+  AssistidosIcon,
+  FavoritadoIcon,
   FavoriteIcon,
   StarNotMarket,
   StartInIcon,
@@ -31,6 +34,15 @@ import noImage from "../../../../public/noImage.jpg";
 import useReviewFilme from "@/hooks/useReviewFilme";
 import useCriarReview from "@/hooks/useCriarReview";
 import useFilme from "@/hooks/useFilme";
+import useFavoritos from "@/hooks/useFavoritos";
+import { filme } from "@/types/filmes.interfaces";
+import Link from "next/link";
+import useDesfavoritar from "@/hooks/useDesfavoritar";
+import useFavoritar from "@/hooks/useFavoritar";
+import useAssistidos from "@/hooks/useAssistidos";
+import useCriarAssistidos from "@/hooks/useCriarAssistidos";
+import useDesassistidos from "@/hooks/useDesassistidos";
+// TODO: Replace with useSession from next-auth/react
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +58,10 @@ export default function Movie() {
   const [modal, setModal] = useState<boolean>(false);
   const [nota, setNota] = useState<number>(0);
   const [review, setReview] = useState<string>("")
-  const { token, user } = useAuthStore();
+  // const { token, user } = useAuthStore();
+  const token = null; // TODO: get from session
+  const user = null;  // TODO: get from session
+
   const [mounted, setMounted] = useState<boolean>(false);
   
   useEffect(() => {
@@ -59,11 +74,18 @@ export default function Movie() {
 
   const params = useParams();
   const id = params.id;
+  const movieId = parseInt(id as string, 10)
 
   const { data: filme } = useFilme(id);
   const { data: reviewsFilme = [] } = useReviewFilme(id);
+  const {data: favoritos = [] } = useFavoritos(); 
   const criarReview = useCriarReview();
-
+  const desfavoritar = useDesfavoritar()
+  const favortiar = useFavoritar()
+  const {data: assistidos} = useAssistidos()
+  const assistir = useCriarAssistidos()
+  
+  const desassistir = useDesassistidos()
   return (
     <>
       <Navbar />
@@ -81,9 +103,41 @@ export default function Movie() {
           <div className="flex justify-between px-25 pt-9.25 pb-13.25 items-center">
             <h1 className="font-bold text-5xl">{filme?.title}</h1>
             <div className="flex items-center justify-center gap-12">
-              <FavoriteIcon />
-              <WatchedIcon />
-            </div>
+              {estaLogado ? 
+              <div>
+                {favoritos.some((favorito) => favorito.id === filme?.id) ? 
+                 <div onClick={()=> desfavoritar.mutate(movieId)}>
+               <FavoritadoIcon />
+                </div>
+                 : 
+               <div onClick={()=> favortiar.mutate(movieId)}>
+                <FavoriteIcon />
+                </div>
+                  }
+              </div> 
+              : 
+              <Link href="/Login">
+                <FavoriteIcon /> 
+              </Link>
+              }
+              {estaLogado ? 
+              <div>
+                {assistidos?.some((assistido) => assistido.id === filme?.id) ?
+                <div onClick={()=> desassistir.mutate(movieId)} className="block shrink-0 cursor-pointer" >
+                  <AssistidoIcon />
+                </div>
+                  :
+                  <div onClick={()=> assistir.mutate(movieId)} className="block shrink-0 cursor-pointer">
+                     <AssistidosIcon /> 
+                  </div>
+                }
+              </div>
+              :
+              <Link href="/Login">
+                <WatchedIcon />
+              </Link>
+              }  
+           </div>
           </div>
           <div className="flex justify-between px-25">
             <div>
@@ -146,7 +200,7 @@ export default function Movie() {
                   <div className="flex gap-4 items-center  ">
                     <Image
                       className="w-20 h-20 rounded-[100%] object-cover"
-                      src={review.movie.posterImageUrl || noImage}
+                      src={review.user.avatarUrl || noImage}
                       alt="poster image"
                       width={80}
                       height={80}

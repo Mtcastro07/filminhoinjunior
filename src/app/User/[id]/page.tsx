@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import poster from "../../../../public/posterFilminhos.png";
 import Image from "next/image";
 import noImage from "../../../../public/userDefault.jpg";
-import noFilme from "../../../../public/noImage.jpg"
+import noFilme from "../../../../public/noImage.jpg";
 import {
   Carousel,
   CarouselContent,
@@ -15,6 +15,9 @@ import {
 import Footer from "@/components/footer";
 import useUserReview from "@/hooks/useUserReview";
 import useUsers from "@/hooks/useUsers";
+import useUserFavoritos from "@/hooks/useUserFavoritos";
+import useUserAssistidos from "@/hooks/useUserAssistidos";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +26,8 @@ export default function User() {
   const id = params.id;
   const { data: userReview = [] } = useUserReview(id);
   const { data: user } = useUsers(id);
+  const { data: favoritos = [] } = useUserFavoritos(id);
+  const { data: assistidos = [] } = useUserAssistidos(id);
 
   return (
     <>
@@ -44,28 +49,22 @@ export default function User() {
             </p>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-5">
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relatiu)ve w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relative w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
+                {favoritos.map((filme) => (
+                  <CarouselItem className="basis-1/8 pl-5" key={filme.id}>
+                    <Link href={`/movies/${filme.id}`} className="block shrink-0">
+                    <div className="relatiu)ve w-50.25 h-79.5 overflow-hidden">
+                      <Image
+                        src={filme.posterImageUrl}
+                        alt="poster"
+                        width={1490}
+                        height={61.25}
+                        className="object-cover"
+                        priority
+                      ></Image>
+                    </div>
+                    </Link>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
             </Carousel>
           </section>
@@ -75,28 +74,22 @@ export default function User() {
             </p>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-5">
-                <CarouselItem className="basis-1/8 pl-5">
+                {assistidos.map((filme)=> (
+                <CarouselItem className="basis-1/8 pl-5" key={filme.id}>
+                    <Link href={`/movies/${filme.id}`} className="block shrink-0">
                   <div className="relative w-50.25 h-79.5 overflow-hidden">
                     <Image
-                      src={poster}
+                      src={filme.posterImageUrl}
                       alt="poster"
                       fill
                       className="object-cover"
                       priority
                     ></Image>
                   </div>
+                    </Link>
                 </CarouselItem>
-                <CarouselItem className="basis-1/8 pl-5">
-                  <div className="relative w-50.25 h-79.5 overflow-hidden">
-                    <Image
-                      src={poster}
-                      alt="poster"
-                      fill
-                      className="object-cover"
-                      priority
-                    ></Image>
-                  </div>
-                </CarouselItem>
+                ))}
+              
               </CarouselContent>
             </Carousel>
           </section>
@@ -105,13 +98,17 @@ export default function User() {
               Reviews
             </h1>
             {userReview.map((review) => (
-              <div className="bg-white mx-25 mt-13.75 rounded-xl drop-shadow-2xl">
+              <div className="bg-white mx-25 mt-13.75 rounded-xl drop-shadow-2xl" key={review.id}>
                 <div className="flex flex-row items-start p-8">
+                  <Link href={`/movies/${review.movie.id}`} className="block shrink-0">
                   <Image
-                    src={review.movie.posterImageUrl || noFilme }
+                    src={review.movie.posterImageUrl || noFilme}
                     alt="poster"
                     className=" w-46 h-61.25 object-cover"
+                    width={46}
+                    height={61.25}
                   ></Image>
+                  </Link>
                   <div className="flex flex-col ml-6 gap-6">
                     <div className="flex flex-row items-center gap-6 justify-center ">
                       <p className="font-bold text-3xl">{review.movie.title}</p>
@@ -125,9 +122,7 @@ export default function User() {
                       </div>
                     </div>
                     <div className="flex flex-row justify-start">
-                      <p className="font-semibold">
-                        {review.text}
-                      </p>
+                      <p className="font-semibold">{review.text}</p>
                     </div>
                   </div>
                 </div>

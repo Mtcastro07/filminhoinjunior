@@ -1,3 +1,4 @@
+'use client'
 import Navbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import { LupaIcon, RetirarIcon } from "../../../../public/icons";
@@ -5,10 +6,16 @@ import poster from "../../../../public/posterFilminhos.png";
 import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
+import useAssistidos from "@/hooks/useAssistidos";
+import useDesassistidos from "@/hooks/useDesassistidos";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Asistidos() {
+  const { data: assistidos } = useAssistidos();
+  const desassistir = useDesassistidos();
+  
   return (
     <>
       <Navbar />
@@ -25,61 +32,25 @@ export default function Asistidos() {
             ></Input>
           </div>
           <section className="relative mx-auto grid grid-cols-5 px-25 gap-8 py-[70px] w-[1440px] items-center justify-center">
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <RetirarIcon />
-              </Link>
+            {assistidos?.map((filme) => (
+              <div className="relative" key={filme.id}>
+                <div onClick={()=> desassistir.mutate(filme.id)} className="absolute cursor-pointer z-50">
+                  <RetirarIcon />
+                </div>
+                <Link href={`/movies/${filme.id}`} className="block shrink-0 ">
+                <Image
+                  className="w-[220px] h-[349px] object-cover"
+                  src={filme.posterImageUrl}
+                  alt="poster"
+                
+                  width={1080}
+                  height={1920}
+                ></Image>
+                </Link>
+              </div>
+            ))}
 
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <RetirarIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <RetirarIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <RetirarIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
-            <div className="relative">
-              <Link href="/" className="absolute">
-                <RetirarIcon />
-              </Link>
-
-              <Image
-                className="w-[220px] h-[349px] object-cover"
-                src={poster}
-                alt="poster"
-              ></Image>
-            </div>
+           
           </section>
         </div>
       </main>

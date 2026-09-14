@@ -54,15 +54,14 @@ export default function Home() {
               <CarouselContent className="-ml-9">
                 {filmesFeatured.map((filme) => (
                   <CarouselItem className="basis-3/4 pl-9" key={filme.id}>
-                  <Link href={`/movies/${filme.id}`}>
-                    <Image
-                      className="h-147.75 w-full object-cover overflow-hidden"
-                      src={filme.bannerImageUrl || noImage}
-                      alt="poster"
-                    ></Image>
-                  </Link>
+                    <Link href={`/movies/${filme.id}`}>
+                      <Image
+                        className="h-147.75 w-full object-cover overflow-hidden"
+                        src={filme.bannerImageUrl || noImage}
+                        alt="poster"
+                      ></Image>
+                    </Link>
                   </CarouselItem>
-                  
                 ))}
               </CarouselContent>
             </Carousel>
@@ -125,11 +124,16 @@ export default function Home() {
                 key={review.id}
               >
                 <div className="flex flex-row items-start p-8">
-                  <Image
-                    src={review.movie.posterImageUrl || poster}
-                    alt="poster"
-                    className=" w-46 h-61.25 object-cover"
-                  ></Image>
+                  <Link href={`/movies/${review.movie.id}`} className="block shrink-0 cursor-pointer">
+                    <Image
+                      src={review.movie.posterImageUrl || poster}
+                      alt="poster"
+                      className=" w-46 h-61.25 object-cover cursor-pointer"
+                      width={46}
+                      height={61.25}
+                    ></Image>
+                  </Link>
+                  
                   <div className="flex flex-col ml-6 gap-6">
                     <div className="flex flex-row items-center gap-6 justify-center ">
                       <p className="font-bold text-3xl">{review.movie.title}</p>
@@ -143,11 +147,15 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-start">
+                      <Link href={`/User/${review.user.id}`} className="block shrink-0">
                       <Image
                         src={review.user.avatarUrl || userDefault}
                         alt="poster"
                         className="w-20 h-20 rounded-[100%] object-cover"
+                        width={80}
+                        height={80}
                       ></Image>
+                      </Link>
                       <p className="ml-4 font-semibold">
                         {review.user.fullName}
                       </p>

@@ -12,7 +12,7 @@ export default function useCriarReview() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CriarReviewInput) => api.post("/reviews/", data),
+    mutationFn: (data: CriarReviewInput) => api.post("/reviews", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
     },

@@ -8,9 +8,14 @@ export default function useReviewFilme(id: ParamValue) {
   const filmeId = parseInt(id as string, 10);
 
   return useQuery({
-    queryKey: ["reviews"],
+    queryKey: ["reviews", filmeId],
     queryFn: async () => {
-      const response = await api.get("/reviews");
+      const response = await api.get("/reviews",{
+        params: {
+          movieId: filmeId,
+        }
+      }
+      );
       return response.data.data as review[];
     },
     select: (reviews) =>

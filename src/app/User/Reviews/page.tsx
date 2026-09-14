@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/navbar";
 import { starMarked } from "@/app/page";
-import poster from "../../../../public/posterFilminhos.png";
+import noImage from "../../../../public/noImage.jpg";
 import Image from "next/image";
 import { EditIcon, DeleteIcon } from "../../../../public/icons";
 import { useState } from "react";
@@ -20,6 +20,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, Field } from "@/components/ui/field";
+import useReview from "@/hooks/useReview";
+import useApagarReview from "@/hooks/useApagarReview";
+import useEditarReview from "@/hooks/useEditarReview";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +30,10 @@ export default function Reviews() {
   const [editar, setEditar] = useState<boolean>(false);
   const [apagar, setApagar] = useState<boolean>(false);
   const [nota, setNota] = useState<number>(0);
+  const [text, setText] = useState<string>("");
+  const { data: reviews } = useReview();
+  const apagarReview = useApagarReview();
+  const editarReview = useEditarReview();
 
   return (
     <>
@@ -38,127 +45,169 @@ export default function Reviews() {
           </h1>
           <div>
             <div className="bg-white mx-25 mt-13.75 rounded-xl drop-shadow-2xl ">
-              <div className="flex flex-row items-start p-8 w-full">
-                <Image
-                  src={poster}
-                  alt="poster"
-                  className=" w-46 h-61.25 object-cover"
-                ></Image>
-                <div className="flex-1 flex-col ml-6 gap-6">
-                  <div className="flex flex-1 flex-row justify-between">
-                    <div className="flex flex-row items-center gap-6  ">
-                      <p className="font-bold text-3xl">Titulo</p>
-                      <p className="font-normal text-xl">2012</p>
-                      <div className="flex flex-row ">
-                        {starMarked(1, 1)}
-                        {starMarked(1, 2)}
-                        {starMarked(1, 3)}
-                        {starMarked(1, 4)}
-                        {starMarked(1, 5)}
+              {reviews?.map((filme) => (
+                <div
+                  className="flex flex-row items-start p-8 w-full"
+                  key={filme.id}
+                >
+                  <Image
+                    src={filme.movie.posterImageUrl || noImage}
+                    alt="poster"
+                    className=" w-46 h-61.25 object-cover"
+                    width={1080}
+                    height={1920}
+                  ></Image>
+                  <div className="flex-1 flex-col ml-6 gap-6">
+                    <div className="flex flex-1 flex-row justify-between">
+                      <div className="flex flex-row items-center gap-6  ">
+                        <p className="font-bold text-3xl">
+                          {filme.movie.title}
+                        </p>
+                        <p className="font-normal text-xl">
+                          {filme.movie.releaseYear}
+                        </p>
+                        <div className="flex flex-row ">
+                          {starMarked(filme.rating, 1)}
+                          {starMarked(filme.rating, 2)}
+                          {starMarked(filme.rating, 3)}
+                          {starMarked(filme.rating, 4)}
+                          {starMarked(filme.rating, 5)}
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center justify-center gap-4.75">
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => setEditar(!editar)}
+                        >
+                          <EditIcon />
+                        </div>
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => setApagar(!apagar)}
+                        >
+                          <DeleteIcon />
+                        </div>
                       </div>
                     </div>
-                    <div className="flex flex-row items-center justify-center gap-4.75">
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => setEditar(!editar)}
-                      >
-                        <EditIcon />
-                      </div>
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => setApagar(!apagar)}
-                      >
-                        <DeleteIcon />
-                      </div>
+                    <div className="flex flex-row justify-start">
+                      <p className="font-semibold pt-6">{filme.text}</p>
                     </div>
                   </div>
-                  <div className="flex flex-row justify-start">
-                    <p className="font-semibold pt-6">
-                      aasdfafadsfasfadsfadsfdasf
-                    </p>
-                  </div>
+                  {editar && (
+                    <Dialog open={editar} onOpenChange={setEditar}>
+                      <DialogContent className="bg-linear-to-b from-[#A3D7EB] to=white rounded-3!">
+                        <div className={inter.className}>
+                          <DialogHeader className="flex flex-row my-10 gap">
+                            <p className="text-xl">
+                              Editar Review:
+                              <span className="text-[#085C06]">
+                                {" "}
+                                {filme.movie.title}
+                              </span>
+                            </p>
+                          </DialogHeader>
+                          <FieldGroup>
+                            <div className="flex flex-row items-center">
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => setNota(1)}
+                              >
+                                {starMarked(nota, 1)}
+                              </div>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => setNota(2)}
+                              >
+                                {starMarked(nota, 2)}
+                              </div>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => setNota(3)}
+                              >
+                                {starMarked(nota, 3)}
+                              </div>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => setNota(4)}
+                              >
+                                {starMarked(nota, 4)}
+                              </div>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => setNota(5)}
+                              >
+                                {starMarked(nota, 5)}
+                              </div>
+                            </div>
+                          </FieldGroup>
+                          <FieldGroup>
+                            <Field className={inter.className}>
+                              <Textarea
+                                placeholder="Escrever avaliação..."
+                                className="border! border-black h-25 bg-white my-6"
+                                onChange={(e) => setText(e.target.value)}
+                              ></Textarea>
+                            </Field>
+                          </FieldGroup>
+                          <DialogFooter className={inter.className}>
+                            <Button
+                              type="submit"
+                              onClick={() => {editarReview.mutate({
+                                movieId: filme.id,
+                                rating: nota,
+                                text: text
+                              }),
+                                setEditar(false)
+                            }
+                            }
+                              className="font-bold rounded-4xl text-xs bg-[#1419AE] cursor-pointer"
+                            >
+                              Concluir
+                            </Button>
+                          </DialogFooter>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  {apagar && (
+                    <Dialog open={apagar} onOpenChange={setApagar}>
+                      <DialogContent className=" flex flex-col bg-linear-to-b from-[#A3D7EB] to=white rounded-3! w-auto ">
+                        <div className={inter.className}>
+                          <DialogHeader className="flex flex-col text-center font-bold text-2xl p-5">
+                            Deseja apagar essa avaliação? Esta ação é
+                            <span className="text-[#EF2027]">
+                              irreversível!
+                            </span>
+                          </DialogHeader>
+                          <DialogFooter className={inter.className}>
+                            <div className="flex gap-3 items-center justify-center w-full">
+                              <Button
+                                type="submit"
+                                onClick={() => setApagar(false)}
+                                className="font-bold rounded-4xl text-xs bg-[#EF2027] cursor-pointer"
+                              >
+                                Cancelar
+                              </Button>
+                              <Button
+                                type="submit"
+                                onClick={() => apagarReview.mutate(filme.id)}
+                                className="font-bold rounded-4xl text-xs bg-[#1419AE] cursor-pointer"
+                              >
+                                Apagar Avaliação
+                              </Button>
+                            </div>
+                          </DialogFooter>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </main>
       <Footer />
-
-      {editar && (
-        <Dialog open={editar} onOpenChange={setEditar}>
-          <DialogContent className="bg-linear-to-b from-[#A3D7EB] to=white rounded-3!">
-            <DialogHeader className="flex flex-row">
-              Editar Review: <span className="text-[#085C06]">Mostros</span>
-            </DialogHeader>
-            <FieldGroup>
-              <div className="flex flex-row items-center">
-                <div className="cursor-pointer" onClick={() => setNota(1)}>
-                  {starMarked(nota, 1)}
-                </div>
-                <div className="cursor-pointer" onClick={() => setNota(2)}>
-                  {starMarked(nota, 2)}
-                </div>
-                <div className="cursor-pointer" onClick={() => setNota(3)}>
-                  {starMarked(nota, 3)}
-                </div>
-                <div className="cursor-pointer" onClick={() => setNota(4)}>
-                  {starMarked(nota, 4)}
-                </div>
-                <div className="cursor-pointer" onClick={() => setNota(5)}>
-                  {starMarked(nota, 5)}
-                </div>
-              </div>
-            </FieldGroup>
-            <FieldGroup>
-              <Field className={inter.className}>
-                <Textarea
-                  placeholder="Escrever avaliação..."
-                  className="border! border-black h-25 bg-white"
-                ></Textarea>
-              </Field>
-            </FieldGroup>
-            <DialogFooter className={inter.className}>
-              <Button
-                type="submit"
-                onClick={() => setEditar(!editar)}
-                className="font-bold rounded-4xl text-xs bg-[#1419AE] cursor-pointer"
-              >
-                Concluir
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {apagar && (
-        <Dialog open={apagar} onOpenChange={setApagar}>
-          <DialogContent className=" flex flex-col bg-linear-to-b from-[#A3D7EB] to=white rounded-3! w-auto ">
-            <DialogHeader className="flex flex-col text-center font-bold text-2xl p-5">
-              Deseja apagar essa avaliação? Esta ação é
-              <span className="text-[#EF2027]">irreversível!</span>
-            </DialogHeader>
-            <DialogFooter className={inter.className}>
-              <div className="flex gap-3 items-center justify-center w-full">
-                <Button
-                  type="submit"
-                  onClick={() => setEditar(!editar)}
-                  className="font-bold rounded-4xl text-xs bg-[#EF2027] cursor-pointer"
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  onClick={() => setApagar(!apagar)}
-                  className="font-bold rounded-4xl text-xs bg-[#1419AE] cursor-pointer"
-                >
-                  Apagar Avaliação
-                </Button>
-              </div>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   );
 }
