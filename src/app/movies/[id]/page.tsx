@@ -11,13 +11,10 @@ import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,7 +27,6 @@ import useFavoritar from "@/hooks/useFavoritar";
 import useFavoritos from "@/hooks/useFavoritos";
 import useFilme from "@/hooks/useFilme";
 import useReviewFilme from "@/hooks/useReviewFilme";
-import { filme } from "@/types/filmes.interfaces";
 import {
 	AssistidoIcon,
 	AssistidosIcon,
@@ -41,8 +37,6 @@ import {
 	WatchedIcon,
 } from "../../../../public/icons";
 import noImage from "../../../../public/noImage.jpg";
-
-// TODO: Replace with useSession from next-auth/react
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -105,13 +99,21 @@ export default function Movie() {
 							{estaLogado && user ? (
 								<div>
 									{favoritos.some((favorito) => favorito.id === filme?.id) ? (
-										<div onClick={() => desfavoritar.mutate(movieId)}>
+										<button
+											type="button"
+											onClick={() => desfavoritar.mutate(movieId)}
+											className="bg-transparent border-none p-0"
+										>
 											<FavoritadoIcon />
-										</div>
+										</button>
 									) : (
-										<div onClick={() => favortiar.mutate(movieId)}>
+										<button
+											type="button"
+											onClick={() => favortiar.mutate(movieId)}
+											className="bg-transparent border-none p-0"
+										>
 											<FavoriteIcon />
-										</div>
+										</button>
 									)}
 								</div>
 							) : (
@@ -124,19 +126,21 @@ export default function Movie() {
 									{assistidos?.some(
 										(assistido) => assistido.id === filme?.id,
 									) ? (
-										<div
+										<button
+											type="button"
 											onClick={() => desassistir.mutate(movieId)}
-											className="block shrink-0 cursor-pointer"
+											className="block shrink-0 cursor-pointer bg-transparent border-none p-0"
 										>
 											<AssistidoIcon />
-										</div>
+										</button>
 									) : (
-										<div
+										<button
+											type="button"
 											onClick={() => assistir.mutate(movieId)}
-											className="block shrink-0 cursor-pointer"
+											className="block shrink-0 cursor-pointer bg-transparent border-none p-0"
 										>
 											<AssistidosIcon />
-										</div>
+										</button>
 									)}
 								</div>
 							) : (
@@ -241,21 +245,41 @@ export default function Movie() {
 						</DialogHeader>
 						<FieldGroup>
 							<div className="flex flex-row items-center">
-								<div className="cursor-pointer" onClick={() => setNota(1)}>
+								<button
+									type="button"
+									className="cursor-pointer bg-transparent border-none p-0"
+									onClick={() => setNota(1)}
+								>
 									{starMarked(nota, 1)}
-								</div>
-								<div className="cursor-pointer" onClick={() => setNota(2)}>
+								</button>
+								<button
+									type="button"
+									className="cursor-pointer bg-transparent border-none p-0"
+									onClick={() => setNota(2)}
+								>
 									{starMarked(nota, 2)}
-								</div>
-								<div className="cursor-pointer" onClick={() => setNota(3)}>
+								</button>
+								<button
+									type="button"
+									className="cursor-pointer bg-transparent border-none p-0"
+									onClick={() => setNota(3)}
+								>
 									{starMarked(nota, 3)}
-								</div>
-								<div className="cursor-pointer" onClick={() => setNota(4)}>
+								</button>
+								<button
+									type="button"
+									className="cursor-pointer bg-transparent border-none p-0"
+									onClick={() => setNota(4)}
+								>
 									{starMarked(nota, 4)}
-								</div>
-								<div className="cursor-pointer" onClick={() => setNota(5)}>
+								</button>
+								<button
+									type="button"
+									className="cursor-pointer bg-transparent border-none p-0"
+									onClick={() => setNota(5)}
+								>
 									{starMarked(nota, 5)}
-								</div>
+								</button>
 							</div>
 						</FieldGroup>
 						<FieldGroup>

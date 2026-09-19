@@ -1,7 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import api from "../services/api";
-import type {User} from "../types/user.interface.ts";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },

@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import type { loginForm } from "@/schemas/loginSchema";
 import { loginSchema } from "@/schemas/loginSchema";
-import api from "@/services/api";
 import { ShowIcon } from "../../../public/icons";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -45,25 +44,25 @@ export default function Login() {
 		SetError(false);
 
 		const response = await signIn("credentials", {
-      email: data.email,
-      password: data.senha,
-      redirect: false,
-    });
-    SetEnviando(false);
-    if (response?.error) {
-      SetError(true);
-      return
-    }
+			email: data.email,
+			password: data.senha,
+			redirect: false,
+		});
+		SetEnviando(false);
+		if (response?.error) {
+			SetError(true);
+			return;
+		}
 
-    reset();
-    router.push("/");
-  }
+		reset();
+		router.push("/");
+	}
 
 	const title = "Film{IN}nhos";
 	const [mostrar, SetMostrar] = useState<boolean>(false);
 
 	return (
-		<>
+	
 			<div className={inter.className}>
 				<main className="bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF] h-dvh ">
 					<div className="flex flex-col items-center justify-center h-full w-full">
@@ -108,15 +107,16 @@ export default function Login() {
 										<div className=" flex relative">
 											<Input
 												className="bg-white"
-												type={mostrar == true ? "text" : "password"}
+												type={mostrar === true ? "text" : "password"}
 												{...register("senha")}
 											></Input>
-											<div
-												className="absolute right-3 top-2 cursor-pointer"
+											<button
+												type="button"
+												className="absolute right-3 top-2 cursor-pointer bg-transparent border-none p-0"
 												onClick={() => SetMostrar(!mostrar)}
 											>
 												<ShowIcon />
-											</div>
+											</button>
 										</div>
 										{errors.senha && (
 											<p className="text-red-600 text-sm">
@@ -127,6 +127,7 @@ export default function Login() {
 									<Field className="flex flex-row items-center">
 										<div className="flex items-center justify-center gap-1.25 mr-10">
 											<Checkbox
+												id="mantenha-conectado"
 												checked={mantenhaConectado}
 												onCheckedChange={(checked) =>
 													setMantenhaConectado(!!checked)
@@ -134,7 +135,7 @@ export default function Login() {
 												className="bg-white cursor-pointer border border-[#6C7278]"
 											/>
 											<FieldLabel
-												onClick={() => setMantenhaConectado(!mantenhaConectado)}
+												htmlFor="mantenha-conectado"
 												className="font-medium text-xs text-[#6C7278] cursor-pointer"
 											>
 												Mantenha-me conectado
@@ -157,13 +158,13 @@ export default function Login() {
 									disabled={enviando}
 									className="cursor-pointer h-12 bg-[#1B559D] hover:bg-[#083a78]! disabled:cursor-not-allowed disabled:opacity-60"
 								>
-									{enviando == false ? "Log In" : "Carregando..."}
+									{enviando === false ? "Log In" : "Carregando..."}
 								</Button>
 							</FieldGroup>
 						</form>
 					</div>
 				</main>
 			</div>
-		</>
+	
 	);
 }

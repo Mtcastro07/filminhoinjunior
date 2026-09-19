@@ -2,27 +2,21 @@
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
 } from "@/components/ui/carousel";
 import useFilmesAcao from "@/hooks/useFilmesAcao";
 import useFilmesComedia from "@/hooks/useFilmesComedia";
 import useFilmesFeatured from "@/hooks/useFilmesFeature";
 import useReviews from "@/hooks/useReviews";
-import { filme, review } from "@/types/filmes.interfaces";
+import { review } from "@/types/reviews.interfaces";
 import {
-	FacebookIcon,
-	InstagramIcon,
 	StarOutIcon,
 	StartInIcon,
-	XIcon,
 } from "../../public/icons";
 import noImage from "../../public/noImage.jpg";
 import poster from "../../public/posterFilminhos.png";

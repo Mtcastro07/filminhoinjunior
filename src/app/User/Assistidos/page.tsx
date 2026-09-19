@@ -2,13 +2,11 @@
 import Navbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import { LupaIcon, RetirarIcon } from "../../../../public/icons";
-import poster from "../../../../public/posterFilminhos.png";
 import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 import useAssistidos from "@/hooks/useAssistidos";
 import useDesassistidos from "@/hooks/useDesassistidos";
-import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,9 +32,9 @@ export default function Asistidos() {
           <section className="relative mx-auto grid grid-cols-5 px-25 gap-8 py-[70px] w-[1440px] items-center justify-center">
             {assistidos?.map((filme) => (
               <div className="relative" key={filme.id}>
-                <div onClick={()=> desassistir.mutate(filme.id)} className="absolute cursor-pointer z-50">
+                <button type="button" onClick={()=> desassistir.mutate(filme.id)} className="absolute cursor-pointer z-50 bg-transparent border-none p-0">
                   <RetirarIcon />
-                </div>
+                </button>
                 <Link href={`/movies/${filme.id}`} className="block shrink-0 ">
                 <Image
                   className="w-[220px] h-[349px] object-cover"

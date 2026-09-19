@@ -148,12 +148,13 @@ export default function Cadastro() {
 												type={mostrar === true ? "text" : "password"}
 												{...register("senha")}
 											></Input>
-											<div
-												className="absolute right-3 top-2 cursor-pointer"
+											<button
+												type="button"
+												className="absolute right-3 top-2 cursor-pointer bg-transparent border-none p-0"
 												onClick={() => SetMostrar(!mostrar)}
 											>
 												<ShowIcon />
-											</div>
+											</button>
 										</div>
 										{errors.senha && (
 											<p className="text-red-600 text-sm">
@@ -171,12 +172,13 @@ export default function Cadastro() {
 												type={mostrar === true ? "text" : "password"}
 												{...register("senhaConfirmation")}
 											></Input>
-											<div
-												className="absolute right-3 top-2 cursor-pointer"
+											<button
+												type="button"
+												className="absolute right-3 top-2 cursor-pointer bg-transparent border-none p-0"
 												onClick={() => SetMostrar(!mostrar)}
 											>
 												<ShowIcon />
-											</div>
+											</button>
 										</div>
 										{errors.senhaConfirmation && (
 											<p className="text-red-600 text-sm">
