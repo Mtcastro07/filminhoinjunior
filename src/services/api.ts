@@ -1,17 +1,15 @@
 import axios from "axios";
-// import { useAuthStore } from "@/stores/authStore";
-// TODO: Replace with getSession from next-auth/react (or next-auth on the server)
+import {getSession} from "next-auth/react";
 
 const api = axios.create({
   baseURL: "https://tarefaapi.onrender.com/api/v1",
 });
 
-api.interceptors.request.use((config) => {
-  // const token = useAuthStore.getState().token;
-  const token = null; // TODO: Get token from session
+api.interceptors.request.use(async (config) => {
+  const session = await getSession();
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (session?.accessToken) {
+    config.headers.Authorization = `Bearer ${session.accessToken}`;
   }
 
   return config;
