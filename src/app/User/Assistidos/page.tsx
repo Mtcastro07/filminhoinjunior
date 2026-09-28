@@ -42,15 +42,12 @@ export default function Asistidos() {
                   className="w-[220px] h-[349px] object-cover"
                   src={filme.posterImageUrl}
                   alt="poster"
-                
                   width={1080}
                   height={1920}
                 ></Image>
                 </Link>
               </div>
             ))}
-
-           
           </section>
         </div>
       </main>

@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-// TODO: Replace with useSession from next-auth
-// import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
 import useLogout from "@/hooks/useLogout";
 import { Inter } from "next/font/google";
 import Link from "next/link";
@@ -30,21 +29,13 @@ import { Button } from "./ui/button";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Navbar() {
-  // TODO: Refactor using next-auth
-  // const { data: session } = useSession();
-  const token = null;
-  const user = null;
+  const { data: session, status } = useSession();
 
   const logout = useLogout();
   const [buscar, setBuscar] = useState<string>("");
-  const [mounted, setMounted] = useState<boolean>(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const estaLogado = mounted && !!token;
+  const estaLogado = status === "authenticated";
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
@@ -58,7 +49,7 @@ export default function Navbar() {
         <Link href="/">
           <Image src={logo} alt="logo" />
         </Link>
-        <div className="flex gap-5">
+        <div className="flex gap-5 justify-center items-center">
           <div className="relative flex">
             <Input
               className="w-2xs h-16 rounded-[1000px] bg-[#FFFFFFA3] pl-4 text-black"
@@ -125,13 +116,13 @@ export default function Navbar() {
             )}
           </div>
 
-          {estaLogado && user ? (
+          {estaLogado && session?.user ? (
             <Link href={`/User/Profile`} className="cursor-pointer">
               <UserIcon />
             </Link>
           ) : (
             <Link href="/Login">
-              <Button className="text-2xl font-bold mt-1 ml-6 bg-blue-900 text-white p-7 cursor-pointer rounded-2xl">
+              <Button className="text-2xl font-bold  bg-blue-900 text-white p-7 cursor-pointer rounded-2xl">
                 Entrar
               </Button>
             </Link>

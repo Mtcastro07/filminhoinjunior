@@ -1,10 +1,10 @@
 "use client";
 import { Inter } from "next/font/google";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-// import { useAuthStore } from "@/stores/authStore";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,7 +42,6 @@ import useFavoritar from "@/hooks/useFavoritar";
 import useAssistidos from "@/hooks/useAssistidos";
 import useCriarAssistidos from "@/hooks/useCriarAssistidos";
 import useDesassistidos from "@/hooks/useDesassistidos";
-// TODO: Replace with useSession from next-auth/react
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,38 +53,45 @@ function starMarkedFilm(target: number, count: number) {
   }
 }
 
+function ageRatingColor(ageRating?: string) {
+  const rating = ageRating?.trim().toUpperCase();
+
+  if (!rating || rating === "L" || rating === "LIVRE") return "bg-[#4CAF50]";
+
+  const age = parseInt(rating, 10);
+
+  if (Number.isNaN(age)) return "bg-[#4CAF50]";
+  if (age <= 10) return "bg-[#2196F3]";
+  if (age <= 12) return "bg-[#FFC107]";
+  if (age <= 14) return "bg-[#FF9800]";
+  if (age <= 16) return "bg-[#F44336]";
+  return "bg-black";
+}
+
 export default function Movie() {
   const [modal, setModal] = useState<boolean>(false);
   const [nota, setNota] = useState<number>(0);
-  const [review, setReview] = useState<string>("")
-  // const { token, user } = useAuthStore();
-  const token = null; // TODO: get from session
-  const user = null;  // TODO: get from session
+  const [review, setReview] = useState<string>("");
+  const { status } = useSession();
 
-  const [mounted, setMounted] = useState<boolean>(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const router = useRouter();
 
-  const router = useRouter()
-  
-  const estaLogado = mounted && !!token;
+  const estaLogado = status === "authenticated";
 
   const params = useParams();
   const id = params.id;
-  const movieId = parseInt(id as string, 10)
+  const movieId = parseInt(id as string, 10);
 
   const { data: filme } = useFilme(id);
   const { data: reviewsFilme = [] } = useReviewFilme(id);
-  const {data: favoritos = [] } = useFavoritos(); 
+  const { data: favoritos = [] } = useFavoritos();
   const criarReview = useCriarReview();
-  const desfavoritar = useDesfavoritar()
-  const favortiar = useFavoritar()
-  const {data: assistidos} = useAssistidos()
-  const assistir = useCriarAssistidos()
-  
-  const desassistir = useDesassistidos()
+  const desfavoritar = useDesfavoritar();
+  const favortiar = useFavoritar();
+  const { data: assistidos } = useAssistidos();
+  const assistir = useCriarAssistidos();
+
+  const desassistir = useDesassistidos();
   return (
     <>
       <Navbar />
@@ -103,121 +109,165 @@ export default function Movie() {
           <div className="flex justify-between px-25 pt-9.25 pb-13.25 items-center">
             <h1 className="font-bold text-5xl">{filme?.title}</h1>
             <div className="flex items-center justify-center gap-12">
-              {estaLogado ? 
-              <div>
-                {favoritos.some((favorito) => favorito.id === filme?.id) ? 
-                 <div onClick={()=> desfavoritar.mutate(movieId)}>
-               <FavoritadoIcon />
+              {estaLogado ? (
+                <div>
+                  {favoritos.some((favorito) => favorito.id === filme?.id) ? (
+                    <div
+                      onClick={() => desfavoritar.mutate(movieId)}
+                      className="block shrink-0 cursor-pointer hover:bg-red-800"
+                    >
+                      <FavoritadoIcon />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => favortiar.mutate(movieId)}
+                      className="block shrink-0 cursor-pointer hover:bg-gray-900"
+                    >
+                      <FavoriteIcon />
+                    </div>
+                  )}
                 </div>
-                 : 
-               <div onClick={()=> favortiar.mutate(movieId)}>
-                <FavoriteIcon />
+              ) : (
+                <Link href="/Login">
+                  <FavoriteIcon />
+                </Link>
+              )}
+              {estaLogado ? (
+                <div>
+                  {assistidos?.some(
+                    (assistido) => assistido.id === filme?.id,
+                  ) ? (
+                    <div
+                      onClick={() => desassistir.mutate(movieId)}
+                      className="block shrink-0 cursor-pointer hover:bg-green-950"
+                    >
+                      <AssistidoIcon />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => assistir.mutate(movieId)}
+                      className="block shrink-0 cursor-pointer hover:bg-gray-900"
+                    >
+                      <AssistidosIcon />
+                    </div>
+                  )}
                 </div>
-                  }
-              </div> 
-              : 
-              <Link href="/Login">
-                <FavoriteIcon /> 
-              </Link>
-              }
-              {estaLogado ? 
-              <div>
-                {assistidos?.some((assistido) => assistido.id === filme?.id) ?
-                <div onClick={()=> desassistir.mutate(movieId)} className="block shrink-0 cursor-pointer" >
-                  <AssistidoIcon />
-                </div>
-                  :
-                  <div onClick={()=> assistir.mutate(movieId)} className="block shrink-0 cursor-pointer">
-                     <AssistidosIcon /> 
-                  </div>
-                }
-              </div>
-              :
-              <Link href="/Login">
-                <WatchedIcon />
-              </Link>
-              }  
-           </div>
+              ) : (
+                <Link href="/Login">
+                  <WatchedIcon />
+                </Link>
+              )}
+            </div>
           </div>
-          <div className="flex justify-between px-25">
+          <div className="flex justify-between px-25 text-3xl">
             <div>
               <div className="font-bold">
                 <p>Ano: {filme?.releaseYear}</p>
-                <p>Duracao: {filme?.durationMinute}</p>
+                <p>
+                  Duracao: {Math.floor((filme?.durationMinutes ?? 0) / 60)}h{" "}
+                  {(filme?.durationMinutes ?? 0) % 60} min
+                </p>
               </div>
               <div className="flex flex-row items-center gap-2">
-                <p>{filme?.ageRating}</p>
+                <div
+                  className={` flex items-center justify-center w-8 h-8 my-4 rounded-sm ${ageRatingColor(
+                    filme?.ageRating,
+                  )}`}
+                >
+                  <p className="text-black font-bold text-xl">
+                    {filme?.ageRating}
+                  </p>
+                </div>
                 <p>{filme?.contentWarning}</p>
               </div>
               <p className="w-150">{filme?.synopsis}</p>
             </div>
             <div>
               <p>
-                <span className="font-bold">Elenco:</span> {filme?.cast}
+                <span className="font-bold">Elenco:</span> {filme?.cast}.
               </p>
               <p>
                 <span className="font-bold">Gêneros: </span>
-                {filme?.genres?.map((e) => e.name + " ")}
+                {filme?.genres?.map((e) => e.name + ",")}
               </p>
             </div>
           </div>
-          <div className="flex flex-row items-center justify-end mr-25 mt-17 mb-17">
-            <div className="flex flex-col items-start">
-              <div className="flex flex-row items-center">
-                {starMarkedFilm(filme?.avgRating || 0, 1)}
-                {starMarkedFilm(filme?.avgRating || 0, 2)}
-                {starMarkedFilm(filme?.avgRating || 0, 3)}
-                {starMarkedFilm(filme?.avgRating || 0, 4)}
-                {starMarkedFilm(filme?.avgRating || 0, 5)}
+          {filme?.reviewCount === 0 ? (
+            <p className="flex flex-row justify-end mr-25 mt-17 mb-17 text-2xl text-[#7189A7] font-semibold">
+              Não há reviews, seja o primeiro!
+            </p>
+          ) : (
+            <div className="flex flex-row items-center justify-end mr-25 mt-17 mb-17">
+              <div className="flex flex-col items-start">
+                <div className="flex flex-row items-center">
+                  {starMarkedFilm(filme?.avgRating || 0, 1)}
+                  {starMarkedFilm(filme?.avgRating || 0, 2)}
+                  {starMarkedFilm(filme?.avgRating || 0, 3)}
+                  {starMarkedFilm(filme?.avgRating || 0, 4)}
+                  {starMarkedFilm(filme?.avgRating || 0, 5)}
+                </div>
+                <p className="font-normal text-xl">
+                  {filme?.reviewCount} avaliacoes
+                </p>
               </div>
-              <p className="font-normal text-xl">
-                {filme?.reviewCount} avaliacoes
-              </p>
+              <p className="text-6xl pb-6 pl-8">{filme?.avgRating || 0}</p>
             </div>
-            <p className="text-6xl pb-6 pl-8">{filme?.avgRating || 0}</p>
-          </div>
+          )}
           <div className="flex justify-end mr-25">
-            {estaLogado ? <Button
-              onClick={() => setModal(!modal)}
-              className="px-12 py-[28.5px] font-semibold rounded-[1000px] text-xl bg-[#3539EF] cursor-pointer"
-            >
-              Criar uma review
-            </Button> : <Button
-              onClick={() => router.push("/Login")}
-              className="px-12 py-[28.5px] font-semibold rounded-[1000px] text-xl bg-[#3539EF] cursor-pointer"
-            >
-              Criar uma review
-            </Button>}
-            
+            {estaLogado ? (
+              <Button
+                onClick={() => setModal(!modal)}
+                className="px-12 py-[28.5px] font-semibold rounded-[1000px] text-xl bg-[#3539EF] cursor-pointer"
+              >
+                Criar uma review
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push("/Login")}
+                className="px-12 py-[28.5px] font-semibold rounded-[1000px] text-xl bg-[#3539EF] cursor-pointer"
+              >
+                Criar uma review
+              </Button>
+            )}
           </div>
         </section>
         <section className="px-25 py-12.5">
           <h1 className="font-bold text-4xl mb-13.75">Reviews</h1>
           <div className="flex flex-col gap-13.75">
-            {reviewsFilme.map((review) => (
-              <div className="p-8 flex flex-col shadow-[8px_8px_20px_rgba(0,0,0,0.5)] rounded-4xl">
-                <div className="flex flex-row justify-between items-center">
-                  <div className="flex gap-4 items-center  ">
-                    <Image
-                      className="w-20 h-20 rounded-[100%] object-cover"
-                      src={review.user.avatarUrl || noImage}
-                      alt="poster image"
-                      width={80}
-                      height={80}
-                    ></Image>
-                    <p className="font-bold text-xl">{review.user.fullName}</p>
+            {reviewsFilme.length === 0 ? (
+              <p className="text-[#7189A7] font-semibold">
+                Este filme não possui reviews
+              </p>
+            ) : (
+              <div>
+                {reviewsFilme.map((review) => (
+                  <div className="p-8 flex flex-col shadow-[8px_8px_20px_rgba(0,0,0,0.5)] rounded-4xl">
+                    <div className="flex flex-row justify-between items-center">
+                      <div className="flex gap-4 items-center  ">
+                        <Image
+                          className="w-20 h-20 rounded-[100%] object-cover"
+                          src={review.user.avatarUrl || noImage}
+                          alt="poster image"
+                          width={80}
+                          height={80}
+                        ></Image>
+                        <p className="font-bold text-xl">
+                          {review.user.fullName}
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center">
+                        {starMarked(review.rating, 1)}
+                        {starMarked(review.rating, 2)}
+                        {starMarked(review.rating, 3)}
+                        {starMarked(review.rating, 4)}
+                        {starMarked(review.rating, 5)}
+                      </div>
+                    </div>
+                    <p className="mt-3 ">{review.text}</p>
                   </div>
-                  <div className="flex flex-row items-center">
-                    {starMarked(review.rating, 1)}
-                    {starMarked(review.rating, 2)}
-                    {starMarked(review.rating, 3)}
-                    {starMarked(review.rating, 4)}
-                    {starMarked(review.rating, 5)}
-                  </div>
-                </div>
-                <p className="mt-3 ">{review.text}</p>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </section>
       </main>

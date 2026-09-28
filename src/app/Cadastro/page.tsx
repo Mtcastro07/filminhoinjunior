@@ -4,7 +4,7 @@ import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import { cadastroSchema } from "@/schemas/cadastroSchema";
 import type { cadastroForm } from "@/schemas/cadastroSchema";
-// import { useAuthStore } from "@/stores/authStore";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Inter } from "next/font/google";
 import {
@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ShowIcon } from "../../../public/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-// TODO: Replace with signIn from next-auth/react
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,14 +44,17 @@ export default function Cadastro() {
     setEnviando(true);
     setError(false);
     try {
-      const response = await api.post("/auth/signup", {
+      await api.post("/auth/signup", {
         fullName: data.nome,
         email: data.email,
         password: data.senha,
         passwordConfirmation: data.senhaConfirmation,
       });
-      // const { token, user } = response.data.data;
-      // useAuthStore.getState().setAuth(token, user);
+      await signIn("credentials", {
+        email: data.email,
+        password: data.senha,
+        redirect: false,
+      });
       reset();
       router.push("/");
     } catch (err) {

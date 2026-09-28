@@ -32,7 +32,7 @@ export default function Favoritos() {
           </div>
           <section className="relative mx-auto grid grid-cols-5 px-25 gap-8 py-[70px] w-[1440px] items-center justify-center">
             {favoritos?.map((filme) => (
-              <div className="relative cursor-pointer">
+              <div className="relative cursor-pointer" key={filme.id}>
                 <div onClick={()=> desfavoritar.mutate(filme.id)} className="absolute z-50 cursor-pointer">
                   <FavoritadoIcon />
                 </div>
@@ -47,8 +47,6 @@ export default function Favoritos() {
                 </Link>
               </div>
             ))}
-
-           
           </section>
         </div>
       </main>

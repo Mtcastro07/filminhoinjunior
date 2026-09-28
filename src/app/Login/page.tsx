@@ -3,8 +3,7 @@
 import { loginSchema } from "@/schemas/loginSchema";
 import { useRouter } from "next/navigation";
 import type { loginForm } from "@/schemas/loginSchema";
-import api from "@/services/api";
-// import { useAuthStore } from "@/stores/authStore";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Inter } from "next/font/google";
 import {
@@ -22,7 +21,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ShowIcon } from "../../../public/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-// TODO: Replace with signIn from next-auth/react
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,21 +42,21 @@ export default function Login() {
   async function onSubmit(data: loginForm) {
     SetEnviando(true);
     SetError(false);
-    try {
-      const response = await api.post("/auth/login", {
-        email: data.email,
-        password: data.senha,
-      });
-      // const { token, user } = response.data.data;
-      // useAuthStore.getState().setAuth(token, user, mantenhaConectado);
+
+    const result = await signIn("credentials", {
+      email: data.email,
+      password: data.senha,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      SetError(true);
+    } else {
       reset();
       router.push("/");
-    } catch (err) {
-      console.error("Falha em fazer a requisição de login", err);
-      SetError(true);
-    } finally {
-      SetEnviando(false);
     }
+
+    SetEnviando(false);
   }
 
   const title = "Film{IN}nhos";

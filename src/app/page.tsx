@@ -11,6 +11,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import { Inter } from "next/font/google";
 import {
@@ -20,13 +21,13 @@ import {
   StartInIcon,
   XIcon,
 } from "../../public/icons";
-import { filme, review } from "@/types/filmes.interfaces";
-import { useState } from "react";
 import useFilmesAcao from "@/hooks/useFilmesAcao";
 import useFilmesComedia from "@/hooks/useFilmesComedia";
 import useReviews from "@/hooks/useReviews";
 import Link from "next/link";
 import useFilmesFeatured from "@/hooks/useFilmesFeature";
+import { useState } from "react";
+import { CarouselDots } from "@/components/carousel-dots";
 
 export function starMarked(target: number, count: number) {
   if (target >= count) {
@@ -44,36 +45,48 @@ export default function Home() {
   const { data: filmesAcao = [] } = useFilmesAcao();
   const { data: filmesFeatured = [] } = useFilmesFeatured();
 
+  const [featuredApi, setFeaturedApi] = useState<CarouselApi>();
+
   return (
     <>
       <Navbar />
       <div className={`${inter.className} flex flex-1 flex-col`}>
         <main className="flex-1">
           <section className=" bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF]">
-            <Carousel opts={{ loop: true, align: "center" }} className="w-full">
+            <Carousel
+              opts={{ loop: true, align: "center" }}
+              setApi={setFeaturedApi}
+              className="w-full"
+            >
               <CarouselContent className="-ml-9">
                 {filmesFeatured.map((filme) => (
                   <CarouselItem className="basis-3/4 pl-9" key={filme.id}>
                     <Link href={`/movies/${filme.id}`}>
                       <Image
                         className="h-147.75 w-full object-cover overflow-hidden"
-                        src={filme.bannerImageUrl || noImage}
+                        src={filme.posterImageUrl || noImage}
                         alt="poster"
+                        width={1920}
+                        height={1080}
                       ></Image>
                     </Link>
                   </CarouselItem>
                 ))}
               </CarouselContent>
             </Carousel>
+            <CarouselDots api={featuredApi} />
           </section>
-          <section className="mt-24.75 bg-linear-to-b from-white to-[#818D9180]">
-            <p className="font-semibold text-2xl border-b-8 border-[#7189A7] w-61.75 rounded-b-md ml-13.75">
+          <section className="mt-24.75 bg-linear-to-b from-white flex flex-col justify-center i to-[#818D9180]">
+            <div className="font-semibold text-2xl ml-13.75">
               Ação
-            </p>
+              <div className="text-transparent bg-[#7189A7] w-61.75 h-[6px] mt-[16.12px] drop-shadow-2xl rounded-[14px]">
+                a
+              </div>
+            </div>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-1">
                 {filmesAcao.map((filme) => (
-                  <CarouselItem className="basis-1/6 pl-1" key={filme.id}>
+                  <CarouselItem className="basis-1/7 pl-1" key={filme.id}>
                     <div className="relative w-50.25 h-79.5 overflow-hidden">
                       <Link href={`/movies/${filme.id}`}>
                         <Image
@@ -90,14 +103,17 @@ export default function Home() {
               </CarouselContent>
             </Carousel>
           </section>
-          <section className="pt-24.75 bg-linear-to-b from-[#818D9180] to-[#DCF0F7]">
-            <p className="font-semibold text-2xl border-b-8 border-[#7189A7] w-61.75 rounded-b-md ml-13.75">
+          <section className="pt-24.75 bg-linear-to-b from-[#818D9180] to-[#DCF0F7] ">
+            <div className="font-semibold text-2xl ml-13.75">
               Comédia
-            </p>
+              <div className="text-transparent bg-[#7189A7] w-61.75 h-[6px] mt-[16.12px] drop-shadow-2xl rounded-[14px]">
+                a
+              </div>
+            </div>
             <Carousel className="w-80%" opts={{ loop: true, align: "start" }}>
               <CarouselContent className="px-[157.5px] py-[54.28px] -ml-1">
                 {filmesComedia.map((filme) => (
-                  <CarouselItem className="basis-1/6 pl-1" key={filme.id}>
+                  <CarouselItem className="basis-1/7 pl-1" key={filme.id}>
                     <div className="relative w-50.25 h-79.5 overflow-hidden">
                       <Link href={`/movies/${filme.id}`}>
                         <Image
@@ -118,13 +134,17 @@ export default function Home() {
             <h1 className="bg-linear-to-r from-[#000000] to-[#1B559D] bg-clip-text text-transparent text-5xl font-semibold">
               Reviews
             </h1>
+
             {reviews.map((review) => (
               <div
                 className="bg-white mx-25 mt-13.75 rounded-xl drop-shadow-2xl"
                 key={review.id}
               >
                 <div className="flex flex-row items-start p-8">
-                  <Link href={`/movies/${review.movie.id}`} className="block shrink-0 cursor-pointer">
+                  <Link
+                    href={`/movies/${review.movie.id}`}
+                    className="block shrink-0 cursor-pointer"
+                  >
                     <Image
                       src={review.movie.posterImageUrl || poster}
                       alt="poster"
@@ -133,7 +153,7 @@ export default function Home() {
                       height={61.25}
                     ></Image>
                   </Link>
-                  
+
                   <div className="flex flex-col ml-6 gap-6">
                     <div className="flex flex-row items-center gap-6 justify-center ">
                       <p className="font-bold text-3xl">{review.movie.title}</p>
@@ -147,14 +167,17 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-start">
-                      <Link href={`/User/${review.user.id}`} className="block shrink-0">
-                      <Image
-                        src={review.user.avatarUrl || userDefault}
-                        alt="poster"
-                        className="w-20 h-20 rounded-[100%] object-cover"
-                        width={80}
-                        height={80}
-                      ></Image>
+                      <Link
+                        href={`/User/${review.user.id}`}
+                        className="block shrink-0"
+                      >
+                        <Image
+                          src={review.user.avatarUrl || userDefault}
+                          alt="poster"
+                          className="w-20 h-20 rounded-[100%] object-cover"
+                          width={80}
+                          height={80}
+                        ></Image>
                       </Link>
                       <p className="ml-4 font-semibold">
                         {review.user.fullName}
