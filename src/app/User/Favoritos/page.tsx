@@ -2,7 +2,6 @@
 import Navbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import { LupaIcon, FavoritadoIcon } from "../../../../public/icons";
-import poster from "../../../../public/posterFilminhos.png";
 import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
@@ -35,7 +34,7 @@ export default function Favoritos() {
               <div className="relative cursor-pointer" key={filme.id}>
                 <div onClick={()=> desfavoritar.mutate(filme.id)} className="absolute z-50 cursor-pointer">
                   <FavoritadoIcon />
-                </div>
+                </button>
                 <Link href={`/movies/${filme.id}`}>
                 <Image
                   className="w-[220px] h-[349px] object-cover"

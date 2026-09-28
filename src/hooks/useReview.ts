@@ -1,7 +1,7 @@
 'use client'
 
 import api from "@/services/api";
-import { review } from "@/types/filmes.interfaces";
+import { review } from "@/types/reviews.interfaces";
 import { useQuery } from "@tanstack/react-query"
 
 export default function useReview(){

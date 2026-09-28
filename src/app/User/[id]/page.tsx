@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { starMarked } from "@/app/page";
 import Navbar from "@/components/navbar";
 import { useParams } from "next/navigation";
-import poster from "../../../../public/posterFilminhos.png";
 import Image from "next/image";
 import noImage from "../../../../public/userDefault.jpg";
 import noFilme from "../../../../public/noImage.jpg";

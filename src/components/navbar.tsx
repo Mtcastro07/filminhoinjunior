@@ -4,26 +4,29 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import useLogout from "@/hooks/useLogout";
 import { Inter } from "next/font/google";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
+import {useSession} from "next-auth/react";
 import Image from "next/image";
-import logo from "../../public/logoFIlminhos.png";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
-  AssistidosIcon,
-  AvaliacaoIcon,
-  LupaIcon,
-  SairIcon,
-  UserIcon,
-} from "../../public/icons";
-import { FavoritosIcon } from "../../public/icons";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuLabel,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import useLogout from "@/hooks/useLogout";
+import {
+	AssistidosIcon,
+	AvaliacaoIcon,
+	FavoritosIcon,
+	LupaIcon,
+	SairIcon,
+	UserIcon,
+} from "../../public/icons";
+import logo from "../../public/logoFIlminhos.png";
 import { Button } from "./ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -37,11 +40,11 @@ export default function Navbar() {
 
   const estaLogado = status === "authenticated";
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      router.push(`/movies?search=${encodeURIComponent(buscar.trim())}`);
-    }
-  }
+	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+		if (e.key === "Enter") {
+			router.push(`/movies?search=${encodeURIComponent(buscar.trim())}`);
+		}
+	}
 
   return (
     <div className={inter.className}>

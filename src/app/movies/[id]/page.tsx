@@ -9,27 +9,32 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  AssistidoIcon,
-  AssistidosIcon,
-  FavoritadoIcon,
-  FavoriteIcon,
-  StarNotMarket,
-  StartInIcon,
-  WatchedIcon,
-} from "../../../../public/icons";
-import { starMarked } from "@/app/page";
-import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import useAssistidos from "@/hooks/useAssistidos";
+import useCriarAssistidos from "@/hooks/useCriarAssistidos";
+import useCriarReview from "@/hooks/useCriarReview";
+import useDesassistidos from "@/hooks/useDesassistidos";
+import useDesfavoritar from "@/hooks/useDesfavoritar";
+import useFavoritar from "@/hooks/useFavoritar";
+import useFavoritos from "@/hooks/useFavoritos";
+import useFilme from "@/hooks/useFilme";
+import useReviewFilme from "@/hooks/useReviewFilme";
+import {
+	AssistidoIcon,
+	AssistidosIcon,
+	FavoritadoIcon,
+	FavoriteIcon,
+	StarNotMarket,
+	StartInIcon,
+	WatchedIcon,
+} from "../../../../public/icons";
 import noImage from "../../../../public/noImage.jpg";
 import useReviewFilme from "@/hooks/useReviewFilme";
 import useCriarReview from "@/hooks/useCriarReview";
@@ -46,11 +51,11 @@ import useDesassistidos from "@/hooks/useDesassistidos";
 const inter = Inter({ subsets: ["latin"] });
 
 function starMarkedFilm(target: number, count: number) {
-  if (target >= count) {
-    return <StartInIcon />;
-  } else {
-    return <StarNotMarket />;
-  }
+	if (target >= count) {
+		return <StartInIcon />;
+	} else {
+		return <StarNotMarket />;
+	}
 }
 
 function ageRatingColor(ageRating?: string) {

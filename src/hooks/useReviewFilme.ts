@@ -1,6 +1,6 @@
 "use client";
 import api from "@/services/api";
-import type { review } from "@/types/filmes.interfaces";
+import type { review } from "@/types/reviews.interfaces";
 import { ParamValue } from "next/dist/server/request/params";
 import { useQuery } from "@tanstack/react-query";
 

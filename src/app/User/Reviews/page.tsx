@@ -9,13 +9,9 @@ import { Inter } from "next/font/google";
 import Footer from "@/components/footer";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -75,18 +71,20 @@ export default function Reviews() {
                         </div>
                       </div>
                       <div className="flex flex-row items-center justify-center gap-4.75">
-                        <div
-                          className="cursor-pointer"
+                        <button
+                          type="button"
+                          className="cursor-pointer bg-transparent border-none p-0"
                           onClick={() => setEditar(!editar)}
                         >
                           <EditIcon />
-                        </div>
-                        <div
-                          className="cursor-pointer"
+                        </button>
+                        <button
+                          type="button"
+                          className="cursor-pointer bg-transparent border-none p-0"
                           onClick={() => setApagar(!apagar)}
                         >
                           <DeleteIcon />
-                        </div>
+                        </button>
                       </div>
                     </div>
                     <div className="flex flex-row justify-start">
@@ -108,36 +106,41 @@ export default function Reviews() {
                           </DialogHeader>
                           <FieldGroup>
                             <div className="flex flex-row items-center">
-                              <div
-                                className="cursor-pointer"
+                              <button
+                                type="button"
+                                className="cursor-pointer bg-transparent border-none p-0"
                                 onClick={() => setNota(1)}
                               >
                                 {starMarked(nota, 1)}
-                              </div>
-                              <div
-                                className="cursor-pointer"
+                              </button>
+                              <button
+                                type="button"
+                                className="cursor-pointer bg-transparent border-none p-0"
                                 onClick={() => setNota(2)}
                               >
                                 {starMarked(nota, 2)}
-                              </div>
-                              <div
-                                className="cursor-pointer"
+                              </button>
+                              <button
+                                type="button"
+                                className="cursor-pointer bg-transparent border-none p-0"
                                 onClick={() => setNota(3)}
                               >
                                 {starMarked(nota, 3)}
-                              </div>
-                              <div
-                                className="cursor-pointer"
+                              </button>
+                              <button
+                                type="button"
+                                className="cursor-pointer bg-transparent border-none p-0"
                                 onClick={() => setNota(4)}
                               >
                                 {starMarked(nota, 4)}
-                              </div>
-                              <div
-                                className="cursor-pointer"
+                              </button>
+                              <button
+                                type="button"
+                                className="cursor-pointer bg-transparent border-none p-0"
                                 onClick={() => setNota(5)}
                               >
                                 {starMarked(nota, 5)}
-                              </div>
+                              </button>
                             </div>
                           </FieldGroup>
                           <FieldGroup>

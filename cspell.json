@@ -1,0 +1,23 @@
+{
+  "version": "0.2",
+  "language": "en,pt-BR",
+  "words": [
+    "adonisjs",
+    "axios",
+    "filminhoinjunior",
+    "Filminhos",
+    "lucide",
+    "shadcn",
+    "tarefaapi",
+    "vinejs",
+    "zod"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    ".next",
+    "public"
+  ],
+  "userWords": [
+    "<button className={pagina === 1 ? \"bg-[#3539EF] rounded-[1000px]! cursor-pointer text-white\" : \"bg-transparent rounded-[1000px]! cursor-pointer text-white\"}>"
+  ]
+}

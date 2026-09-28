@@ -23,23 +23,25 @@ import {
 } from "../../public/icons";
 import useFilmesAcao from "@/hooks/useFilmesAcao";
 import useFilmesComedia from "@/hooks/useFilmesComedia";
-import useReviews from "@/hooks/useReviews";
-import Link from "next/link";
 import useFilmesFeatured from "@/hooks/useFilmesFeature";
 import { useState } from "react";
 import { CarouselDots } from "@/components/carousel-dots";
 
 export function starMarked(target: number, count: number) {
-  if (target >= count) {
-    return <StartInIcon />;
-  } else {
-    return <StarOutIcon />;
-  }
+	if (target >= count) {
+		return <StartInIcon />;
+	} else {
+		return <StarOutIcon />;
+	}
 }
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+	const { data: reviews = [] } = useReviews();
+	const { data: filmesComedia = [] } = useFilmesComedia();
+	const { data: filmesAcao = [] } = useFilmesAcao();
+	const { data: filmesFeatured = [] } = useFilmesFeatured();
   const { data: reviews = [] } = useReviews();
   const { data: filmesComedia = [] } = useFilmesComedia();
   const { data: filmesAcao = [] } = useFilmesAcao();
