@@ -9,11 +9,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
@@ -27,26 +27,27 @@ import useFavoritos from "@/hooks/useFavoritos";
 import useFilme from "@/hooks/useFilme";
 import useReviewFilme from "@/hooks/useReviewFilme";
 import {
-	AssistidoIcon,
-	AssistidosIcon,
-	FavoritadoIcon,
-	FavoriteIcon,
-	StarNotMarket,
-	StartInIcon,
-	WatchedIcon,
+  AssistidoIcon,
+  AssistidosIcon,
+  FavoritadoIcon,
+  FavoriteIcon,
+  StarNotMarket,
+  StartInIcon,
+  WatchedIcon,
 } from "../../../../public/icons";
 import noImage from "../../../../public/noImage.jpg";
+import userNoImage from "../../../../public/userDefault.jpg";
 import Link from "next/link";
 import { starMarked } from "@/app/page";
 
 const inter = Inter({ subsets: ["latin"] });
 
 function starMarkedFilm(target: number, count: number) {
-	if (target >= count) {
-		return <StartInIcon />;
-	} else {
-		return <StarNotMarket />;
-	}
+  if (target >= count) {
+    return <StartInIcon />;
+  } else {
+    return <StarNotMarket />;
+  }
 }
 
 function ageRatingColor(ageRating?: string) {
@@ -202,11 +203,11 @@ export default function Movie() {
                   {starMarkedFilm(filme?.avgRating || 0, 4)}
                   {starMarkedFilm(filme?.avgRating || 0, 5)}
                 </div>
-                <p className="font-normal text-xl">
-                  {filme?.reviewCount} avaliacoes
+                <p className="ml-2 mt-2 font-normal text-xl">
+                  {filme?.reviewCount} Avaliações
                 </p>
               </div>
-              <p className="text-6xl pb-6 pl-8">{filme?.avgRating || 0}</p>
+              <p className="text-5xl pb-6 pl-8">{filme?.avgRating || 0}</p>
             </div>
           )}
           <div className="flex justify-end mr-25">
@@ -242,7 +243,7 @@ export default function Movie() {
                       <div className="flex gap-4 items-center  ">
                         <Image
                           className="w-20 h-20 rounded-[100%] object-cover"
-                          src={review.user.avatarUrl || noImage}
+                          src={review.user.avatarUrl || userNoImage}
                           alt="poster image"
                           width={80}
                           height={80}

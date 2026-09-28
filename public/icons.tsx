@@ -341,8 +341,8 @@ export function StarNotMarket() {
 	return (
 		<>
 			<svg
-				width="69"
-				height="65"
+				width="46"
+				height="44"
 				viewBox="0 0 69 65"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"

@@ -149,7 +149,7 @@ export default function Home() {
                   <div className="flex flex-col ml-6 gap-6">
                     <div className="flex flex-row items-center gap-6 justify-center ">
                       <p className="font-bold text-3xl">{review.movie.title}</p>
-                      <p className="font-normal">{review.movie.releaseYear}</p>
+                      <p className="font-normal text-3xl">{review.movie.releaseYear}</p>
                       <div className="flex flex-row ">
                         {starMarked(review.rating, 1)}
                         {starMarked(review.rating, 2)}
