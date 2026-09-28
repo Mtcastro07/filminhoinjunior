@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query"
 export default function useReview(){
     
     return useQuery({
-        queryKey: ["reviews"],
+        queryKey: ["reviews", "me"],
         queryFn: async () => {
             const response = await api.get("/account/reviews");
             return response.data.data as review[];

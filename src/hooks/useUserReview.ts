@@ -8,7 +8,7 @@ export default function useUserReview(id: ParamValue) {
   const userId = parseInt(id as string, 10);
 
   return useQuery({
-    queryKey: ["reviews"],
+    queryKey: ["reviews", "user", userId],
     queryFn: async () => {
       const response = await api.get(`/users/${userId}/reviews`);
       return response.data.data as review[];

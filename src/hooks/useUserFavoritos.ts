@@ -7,7 +7,7 @@ import { ParamValue } from "next/dist/server/request/params";
 
 export default function useUserFavoritos(id: ParamValue){
     return useQuery({
-        queryKey: ['userFavoritos'],
+        queryKey: ['userFavoritos', id],
         queryFn: async () => {
             const response = await api.get(`/users/${id}/favorites`);
             return response.data.data as filme[];

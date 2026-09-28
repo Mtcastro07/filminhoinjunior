@@ -505,6 +505,50 @@ export function FavoritadoIcon() {
 	);
 }
 
+export function NextPageIcon() {
+	return (
+		<>
+			<svg
+				width="12"
+				height="20"
+				viewBox="0 0 12 20"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M2 2L10 10L2 18"
+					stroke="currentColor"
+					stroke-width="3"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
+			</svg>
+		</>
+	);
+}
+
+export function PreviousPageIcon() {
+	return (
+		<>
+			<svg
+				width="12"
+				height="20"
+				viewBox="0 0 12 20"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M10 2L2 10L10 18"
+					stroke="currentColor"
+					stroke-width="3"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
+			</svg>
+		</>
+	);
+}
+
 export function AssistidoIcon() {
   return (
     <>

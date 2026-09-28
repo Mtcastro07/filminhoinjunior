@@ -11,8 +11,6 @@ export default function useLogout() {
     mutationFn: () => api.post("/account/logout"),
     onSettled: async () => {
       await signOut({ redirect: false });
-    onSettled: async () => {
-      await signOut({ redirect: false });
       router.push("/");
     },
   });

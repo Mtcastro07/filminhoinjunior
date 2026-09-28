@@ -1,11 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { cadastroSchema } from "@/schemas/cadastroSchema";
-import type { cadastroForm } from "@/schemas/cadastroSchema";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ import type { cadastroForm } from "@/schemas/cadastroSchema";
 import { cadastroSchema } from "@/schemas/cadastroSchema";
 import api from "@/services/api";
 import { ShowIcon } from "../../../public/icons";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -101,8 +99,10 @@ export default function Cadastro() {
 										</FieldLabel>
 										<Input
 											className="text-black"
-                      type="text"
-                    onChange={(e) => {setError(false); register("nome").onChange(e)}}
+											type="text"
+											{...register("nome", {
+												onChange: () => setError(false),
+											})}
 										></Input>
 										{errors.nome && (
 											<p className="text-red-600 text-sm">

@@ -5,6 +5,7 @@ import { LupaIcon, RetirarIcon } from "../../../../public/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
+import Footer from "@/components/footer";
 import useAssistidos from "@/hooks/useAssistidos";
 import useDesassistidos from "@/hooks/useDesassistidos";
 
@@ -49,6 +50,7 @@ export default function Asistidos() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

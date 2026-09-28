@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { loginForm } from "@/schemas/loginSchema";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import type { loginForm } from "@/schemas/loginSchema";
 import { loginSchema } from "@/schemas/loginSchema";
 import { ShowIcon } from "../../../public/icons";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const inter = Inter({ subsets: ["latin"] });
 

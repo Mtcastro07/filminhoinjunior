@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import useLogout from "@/hooks/useLogout";
 import { Inter } from "next/font/google";
-import {useSession} from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,

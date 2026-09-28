@@ -16,7 +16,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import useAssistidos from "@/hooks/useAssistidos";
 import useCriarAssistidos from "@/hooks/useCriarAssistidos";
 import useCriarReview from "@/hooks/useCriarReview";
@@ -36,17 +36,8 @@ import {
 	WatchedIcon,
 } from "../../../../public/icons";
 import noImage from "../../../../public/noImage.jpg";
-import useReviewFilme from "@/hooks/useReviewFilme";
-import useCriarReview from "@/hooks/useCriarReview";
-import useFilme from "@/hooks/useFilme";
-import useFavoritos from "@/hooks/useFavoritos";
-import { filme } from "@/types/filmes.interfaces";
 import Link from "next/link";
-import useDesfavoritar from "@/hooks/useDesfavoritar";
-import useFavoritar from "@/hooks/useFavoritar";
-import useAssistidos from "@/hooks/useAssistidos";
-import useCriarAssistidos from "@/hooks/useCriarAssistidos";
-import useDesassistidos from "@/hooks/useDesassistidos";
+import { starMarked } from "@/app/page";
 
 const inter = Inter({ subsets: ["latin"] });
 

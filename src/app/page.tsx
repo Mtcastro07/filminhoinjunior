@@ -9,20 +9,14 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Inter } from "next/font/google";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  StarOutIcon,
-  StartInIcon,
-  XIcon,
-} from "../../public/icons";
+import { StarOutIcon, StartInIcon } from "../../public/icons";
 import useFilmesAcao from "@/hooks/useFilmesAcao";
 import useFilmesComedia from "@/hooks/useFilmesComedia";
+import useReviews from "@/hooks/useReviews";
+import Link from "next/link";
 import useFilmesFeatured from "@/hooks/useFilmesFeature";
 import { useState } from "react";
 import { CarouselDots } from "@/components/carousel-dots";
@@ -38,10 +32,6 @@ export function starMarked(target: number, count: number) {
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-	const { data: reviews = [] } = useReviews();
-	const { data: filmesComedia = [] } = useFilmesComedia();
-	const { data: filmesAcao = [] } = useFilmesAcao();
-	const { data: filmesFeatured = [] } = useFilmesFeatured();
   const { data: reviews = [] } = useReviews();
   const { data: filmesComedia = [] } = useFilmesComedia();
   const { data: filmesAcao = [] } = useFilmesAcao();
@@ -78,7 +68,7 @@ export default function Home() {
             </Carousel>
             <CarouselDots api={featuredApi} />
           </section>
-          <section className="mt-24.75 bg-linear-to-b from-white flex flex-col justify-center i to-[#818D9180]">
+          <section className="mt-24.75 bg-linear-to-b from-white to-[#818D9180]">
             <div className="font-semibold text-2xl ml-13.75">
               Ação
               <div className="text-transparent bg-[#7189A7] w-61.75 h-[6px] mt-[16.12px] drop-shadow-2xl rounded-[14px]">

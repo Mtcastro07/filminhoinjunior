@@ -19,7 +19,7 @@ export default function Favoritos() {
       <Navbar />
       <main className={`${inter.className} flex flex-1 flex-col`}>
         <div className="flex-1 bg-linear-to-b from-[#A3D7EB] to-[#FFFFFF]">
-          <h1 className="ml-25 pt-21 -mb-4 font-medium text-5xl">Assistidos</h1>
+          <h1 className="ml-25 pt-21 -mb-4 font-medium text-5xl">Favoritos</h1>
           <div className="flex w-full relative">
             <div className="absolute top-27 left-29">
               <LupaIcon />
@@ -32,7 +32,7 @@ export default function Favoritos() {
           <section className="relative mx-auto grid grid-cols-5 px-25 gap-8 py-[70px] w-[1440px] items-center justify-center">
             {favoritos?.map((filme) => (
               <div className="relative cursor-pointer" key={filme.id}>
-                <div onClick={()=> desfavoritar.mutate(filme.id)} className="absolute z-50 cursor-pointer">
+                <button type="button" onClick={()=> desfavoritar.mutate(filme.id)} className="absolute z-50 cursor-pointer bg-transparent border-none p-0">
                   <FavoritadoIcon />
                 </button>
                 <Link href={`/movies/${filme.id}`}>

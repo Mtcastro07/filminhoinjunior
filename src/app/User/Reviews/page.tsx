@@ -93,7 +93,7 @@ export default function Reviews() {
                   </div>
                   {editar && (
                     <Dialog open={editar} onOpenChange={setEditar}>
-                      <DialogContent className="bg-linear-to-b from-[#A3D7EB] to=white rounded-3!">
+                      <DialogContent className="bg-linear-to-b from-[#A3D7EB] to-white rounded-3!">
                         <div className={inter.className}>
                           <DialogHeader className="flex flex-row my-10 gap">
                             <p className="text-xl">
@@ -174,7 +174,7 @@ export default function Reviews() {
                   )}
                   {apagar && (
                     <Dialog open={apagar} onOpenChange={setApagar}>
-                      <DialogContent className=" flex flex-col bg-linear-to-b from-[#A3D7EB] to=white rounded-3! w-auto ">
+                      <DialogContent className=" flex flex-col bg-linear-to-b from-[#A3D7EB] to-white rounded-3! w-auto ">
                         <div className={inter.className}>
                           <DialogHeader className="flex flex-col text-center font-bold text-2xl p-5">
                             Deseja apagar essa avaliação? Esta ação é

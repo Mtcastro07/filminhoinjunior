@@ -7,7 +7,7 @@ import { ParamValue } from "next/dist/server/request/params";
 
 export default function useUserAssistidos(id: ParamValue){
     return useQuery({
-        queryKey: ['userAssistidos'],
+        queryKey: ['userAssistidos', id],
         queryFn: async () => {
             const response = await api.get(`/users/${id}/watched`);
             return response.data.data as filme[];
